@@ -32,12 +32,12 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
-    'articles',
+    'main',
     'accounts',
-    'rest_framework',
+    # 'rest_framework',
     # 'rest_framework.authtoken',
     # 'dj_rest_auth',
-    'corsheaders',
+    # 'corsheaders',
     # 'django.contrib.sites',
     # 'allauth',
     # 'allauth.account',
