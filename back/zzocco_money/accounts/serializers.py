@@ -15,6 +15,8 @@ class UserSerializer(serializers.ModelSerializer):
             'income_prospect',
             'asset_level',
             'income_level',
+            'profile_image',
+            'product_list'
         ]
 
         extra_kwargs = {'password': {'write_only': True}}  # 비밀번호는 쓰기 전용
