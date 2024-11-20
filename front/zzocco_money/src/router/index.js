@@ -6,6 +6,8 @@ import ProfileView from '@/views/ProfileView.vue'
 import CurrencyConverterView from '@/views/CurrencyConverterView.vue'
 import CommunityView from '@/views/CommunityView.vue'
 import RecommendView from '@/views/RecommendView.vue'
+import BankLocatorView from '@/views/BankLocatorView.vue'
+import SavingsView from '@/views/SavingsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +33,11 @@ const router = createRouter({
       component: ProfileView
     },
     {
+      path: '/savings',
+      name: 'savings',
+      component: SavingsView
+    },
+    {
       path: '/currency-converter',
       name: 'currency-converter',
       component: CurrencyConverterView
@@ -45,6 +52,11 @@ const router = createRouter({
       name: 'recommend',
       component: RecommendView
     },
+    {
+      path: '/bank_locator',
+      name: 'bank-locator',
+      component: BankLocatorView
+    }
   ],
 })
 
