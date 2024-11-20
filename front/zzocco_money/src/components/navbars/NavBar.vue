@@ -1,13 +1,14 @@
 <template>
   <div>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #331C11"> <!-- bg-dark로 배경을 검정색으로, navbar-dark로 글씨를 흰색으로 설정 -->
+    <nav class="navbar navbar-expand-lg navbar-dark"> <!-- bg-dark로 배경을 검정색으로, navbar-dark로 글씨를 흰색으로 설정 -->
       <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
           <!-- 로고는 왼쪽에 기본적으로 위치합니다. -->
-          <RouterLink :to="{name: 'home'}" class="nav-link"><img src="../../assets/logo_white.png" alt="미낭;러ㅣㅁㄴ아러"></RouterLink>
+          <RouterLink :to="{name: 'home'}" class="nav-link"><img src="../../assets/logo_wave.png" alt="logo"></RouterLink>
+
           
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> <!-- ms-auto 클래스를 사용하여 오른쪽으로 정렬 -->
             <li class="nav-item">
@@ -48,14 +49,15 @@
   font-size: inherit; /* 폰트 크기 상속 */
   cursor: pointer; /* 마우스 포인터 설정 */
 }
-<style scoped>
 /* Navbar */
 .navbar {
+  font-family: 'MabinogiClassicR';
+  font-size: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #8B4513; /* 갈색 */
+  background-color: #3f2411; /* 갈색 */
   border-bottom: 1px solid #6D3510; /* 어두운 갈색 테두리 */
 }
 .nav-links {
