@@ -33,3 +33,10 @@ body {
   background-color: #aa887b; 
   color: #25150a;
 }
+
+.container {
+  max-width: 1300px; /* 최대 너비 */
+  margin: 0 auto; /* 좌우 중앙 정렬 */
+  padding: 0 20px; /* 내부 좌우 여백 */
+  box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+}
