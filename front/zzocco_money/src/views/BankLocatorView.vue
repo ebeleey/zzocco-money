@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>금융 상품 추천</h1>
+        <h1>근처 은행 찾기</h1>
     </div>
 </template>
 
@@ -8,6 +8,6 @@
 
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 
 </style>

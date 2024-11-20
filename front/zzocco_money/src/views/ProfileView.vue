@@ -1,6 +1,6 @@
 <template>
 	<div>
-		우하하
+		<h1>마이페이지</h1>
 	</div>
 </template>
 
@@ -8,6 +8,6 @@
 
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 
 </style>
