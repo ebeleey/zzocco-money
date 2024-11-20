@@ -1,7 +1,8 @@
-from django.urls import path, include
+from django.urls import path
 from . import views
 
 app_name = 'savings'
 urlpatterns = [
-    path('get/', views.getdata, name='getdata'),  # 직접 작성한 회원가입 View
+    path('get-deposits/', views.getDeposit, name='get-deposits'),
+    path('get-savings/', views.getSaving, name='get-savings'),
 ]
