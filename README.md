@@ -1,9 +1,10 @@
-# 🍫 쪼꼬머니
+<div align="center">
+  <img src='./front/zzocco_money/src/assets/logo_wave.png' width='300px'>
+</div>
 
 ## 프로젝트 개요
 - 예적금 상품 조회 및 추천 서비스
 - 기간: 2024.11.18 ~ 2024.11.26
-
 
 ## 서비스 특징
 
@@ -67,7 +68,13 @@
 
 
 ### Frontend
-<img src="https://img.shields.io/badge/vue.js-42b883?style=for-the-badge&logo=vue.js&logoColor=white">
+<img src="https://img.shields.io/badge/vue.js-42b883?style=for-the-badge&logo=vue.js&logoColor=white"> <img src="https://img.shields.io/badge/css-264DE4?style=for-the-badge&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white">
+
+### DevOps
+<img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"> <img src="https://img.shields.io/badge/github-black?style=for-the-badge&logo=github&logoColor=white">
+
+### Tools
+<img src="https://img.shields.io/badge/notion-black?style=for-the-badge&logo=notion&logoColor=white"> <img src="https://img.shields.io/badge/postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white"> <img src="https://img.shields.io/badge/figma-1ABCFE?style=for-the-badge&logo=figma&logoColor=white">
 
 ## 개발 환경
 
