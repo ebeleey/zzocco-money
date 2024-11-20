@@ -27,3 +27,12 @@
   font-weight: normal;
   font-style: normal;
 }
+
+body {
+  font-family: 'Pretendard-Regular';
+  background-color: #aa887b; 
+  color: #25150a;
+}
+.navbar {
+  background-color: #3f2411;
+}
