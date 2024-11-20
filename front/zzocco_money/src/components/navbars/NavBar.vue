@@ -14,6 +14,7 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
+        
         <!-- 로고와 네비게이션 메뉴 -->
         <div class="collapse navbar-collapse" id="navbarToggler">
           <RouterLink :to="{ name: 'home' }">
@@ -70,11 +71,14 @@
 
 /* Navbar */
 .navbar {
+  font-family: 'Pretendard-Regular';
   font-size: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
+  background-color: #3f2411;
+  border-color: #3f2411;
 }
 
 .nav-link {

@@ -29,10 +29,7 @@
 }
 
 body {
-  font-family: 'Pretendard-Regular';
+  font-family: 'Pretendard-Regular', sans-serif !important;
   background-color: #aa887b; 
   color: #25150a;
-}
-.navbar {
-  background-color: #3f2411;
 }
