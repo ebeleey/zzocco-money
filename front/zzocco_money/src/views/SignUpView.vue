@@ -25,17 +25,21 @@
 <script setup>
 import { ref, reactive, computed } from "vue";
 import { useRouter } from 'vue-router'
+import { useAccountStore } from "@/stores/account";
+import axios from "axios";
 import StepOne from "@/components/signups/StepOne.vue";
 import StepTwo from "@/components/signups/StepTwo.vue";
 import StepThree from "@/components/signups/StepThree.vue";
 
+
+const store = useAccountStore()
 const router = useRouter()
 const goToLogin = function() {
   router.push('/login')
 }
 const currentStep = ref(1); // 현재 단계
 const formData = ref({
-	basicInfo: { name: "", email: "", password: "" },
+	basicInfo: { name: "", username: "", password: "" },
 	detailedInfo: { gender: "", marriage: "", income_prospect: "", asset_level: "", income_level: "" },
 	financialInfo: { selectedProducts: null },
 });
@@ -63,9 +67,28 @@ const goToPreviousStep = () => {
 
 // 최종 데이터 제출 처리
 const handleSubmit = () => {
-	console.log("회원가입 데이터:", formData);
-	alert("회원가입이 완료되었습니다!");
-	router.push({name: 'home'})
+  const user = formData.value
+  axios({
+    method: 'post',
+    url: `http://127.0.0.1:8000/accounts/signup/`,
+    data: {
+      name: user.basicInfo.name,
+      username: user.basicInfo.username,
+      password: user.basicInfo.password,
+      gender: user.detailedInfo.gender,
+      marriage: user.detailedInfo.marriage,
+      income_prospect: user.detailedInfo.income_prospect,
+      asset_level: user.detailedInfo.asset_level,
+      income_level: user.detailedInfo.income_level,
+      product_list: user.financialInfo.selectedProducts
+    }
+  })
+  .then(res => {
+    console.log(formData)
+    alert("회원가입이 완료되었습니다!");
+	  router.push({name: 'home'})
+  })
+  .catch(err => console.log(err))
 };
 
 </script>

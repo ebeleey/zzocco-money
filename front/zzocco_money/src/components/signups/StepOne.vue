@@ -7,8 +7,8 @@
 			</div>
 
 			<div class="form-group">
-				<label for="email">아이디</label>
-				<input type="email" id="email" v-model="formData.basicInfo.email" placeholder="이메일을 입력하세요." required />
+				<label for="username">아이디</label>
+				<input type="username" id="username" v-model="formData.basicInfo.username" placeholder="이메일을 입력하세요." required />
 			</div>
 
 			<div class="form-group">
