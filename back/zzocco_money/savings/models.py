@@ -19,7 +19,7 @@ class Deposit(models.Model):
 
 
 class DepositOption(models.Model):
-    deposit_id = models.ForeignKey(Deposit, on_delete=models.CASCADE)   # FK: 어느 상품의 옵션인지
+    deposit_id = models.ForeignKey(Deposit, related_name='options', on_delete=models.CASCADE)   # FK: 어느 상품의 옵션인지
     intr_rate_type = models.CharField(max_length=10)    # 저축 금리 유형
     intr_rate_type_nm = models.CharField(max_length=100)    # 저축 금리 유형명
     save_trm = models.IntegerField()    # 저축 기간
