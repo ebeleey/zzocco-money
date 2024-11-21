@@ -30,7 +30,12 @@
       </thead>
 
       <tbody>
-        <tr v-for="(product, index) in paginatedProducts" :key="product.id">
+        <tr 
+          v-for="(product, index) in paginatedProducts" 
+          :key="product.id"
+          @click="openDetailModal(product)"
+          class="cursor-pointer"
+        >
           <td>{{ (currentPage - 1) * itemsPerPage + index + 1 }}</td>
           <td>
             {{ activeTab === 'deposit' ? product.deposit_id__kor_co_nm : product.saving_id__kor_co_nm }}
@@ -50,6 +55,77 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- 상세 정보 모달 -->
+    <div 
+      v-if="selectedProduct" 
+      class="modal-overlay"
+      @click.self="closeDetailModal"
+    >
+      <div class="modal-content">
+        <button class="close-btn" @click="closeDetailModal">×</button>
+        <h2>{{ activeTab === 'deposit' ? selectedProduct.deposit_id__fin_prdt_nm : selectedProduct.saving_id__fin_prdt_nm }}</h2>
+        
+        <div class="modal-details">
+          <div class="detail-row">
+            <span class="detail-label">금융회사</span>
+            <span class="detail-value">
+              {{ activeTab === 'deposit' ? selectedProduct.deposit_id__kor_co_nm : selectedProduct.saving_id__kor_co_nm }}
+            </span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="detail-label">기본금리</span>
+            <span class="detail-value">{{ selectedProduct.intr_rate }}%</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="detail-label">최고 우대금리</span>
+            <span class="detail-value">{{ selectedProduct.intr_rate2 }}%</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="detail-label">가입 대상</span>
+            <span class="detail-value">
+              {{ activeTab === 'deposit' 
+                ? joinDenyMapping[selectedProduct.deposit_id__join_deny] 
+                : joinDenyMapping[selectedProduct.saving_id__join_deny] 
+              }}
+            </span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="detail-label">저축 기간</span>
+            <span class="detail-value">{{ selectedProduct.save_trm }}개월</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="detail-label">가입 방법</span>
+            <span class="detail-value">
+              {{ activeTab === 'deposit' 
+                ? selectedProduct.deposit_id__join_way 
+                : selectedProduct.saving_id__join_way 
+              }}
+            </span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="detail-label">우대 조건</span>
+            <span class="detail-value">
+              {{ activeTab === 'deposit' 
+                ? selectedProduct.deposit_id__spcl_cnd 
+                : selectedProduct.saving_id__spcl_cnd 
+              }}
+            </span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="detail-label">금리 유형</span>
+            <span class="detail-value">{{ selectedProduct.intr_rate_type_nm }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- 페이지네이션 -->
     <div class="pagination">
@@ -86,9 +162,20 @@ const props = defineProps({
 });
 
 
+const selectedProduct = ref(null);
+
+// 함수를 ref 또는 computed로 정의
+const openDetailModal = (product) => {
+  selectedProduct.value = product;
+};
+
+const closeDetailModal = () => {
+  selectedProduct.value = null;
+};
+
 
 // 페이지네이션
-const itemsPerPage = 30; // 한 페이지당 항목 수
+const itemsPerPage = 20; // 한 페이지당 항목 수
 const currentPage = ref(1); // 현재 페이지
 
 // 정렬 기준 (초기값: 최고 우대금리)
@@ -111,31 +198,30 @@ const filteredProducts = computed(() => {
     const matchesEligibility =
       props.filters.eligibility.length === 0 ||
       props.filters.eligibility.includes(
-        activeTab.value === "deposit"
+        props.activeTab.value === "deposit"
           ? product.deposit_id__join_deny
           : product.saving_id__join_deny
       );
     const matchesMethod =
       props.filters.applicationMethods.length === 0 ||
       props.filters.applicationMethods.includes(
-        activeTab.value === "deposit"
+        props.activeTab.value === "deposit"
           ? product.deposit_id__join_way
           : product.saving_id__join_way
       );
-    const matchesCondition =
-      props.filters.benefitConditions.length === 0 ||
-      props.filters.benefitConditions.includes(
-        activeTab.value === "deposit"
-          ? product.deposit_id__spcl_cnd
-          : product.saving_id__spcl_cnd
-      );
-
+    // const matchesCondition =
+    //   props.filters.benefitConditions.length === 0 ||
+    //   props.filters.benefitConditions.includes(
+    //     activeTab.value === "deposit"
+    //       ? product.deposit_id__spcl_cnd
+    //       : product.saving_id__spcl_cnd
+    //   );
+    
     return (
       matchesPeriod &&
       matchesCalculation &&
       matchesEligibility &&
-      matchesMethod &&
-      matchesCondition
+      matchesMethod
     );
   });
 });
@@ -156,9 +242,86 @@ const paginatedProducts = computed(() => {
   const endIndex = startIndex + itemsPerPage;
   return sortedProducts.value.slice(startIndex, endIndex);
 });
+
+
+defineExpose({
+  openDetailModal,
+  closeDetailModal
+});
+
 </script>
 
 <style scoped>
+/* 새로 추가된 모달 스타일 */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-details {
+  margin-top: 20px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+.detail-label {
+  font-weight: bold;
+  color: #3f2411;
+  width: 130px; /* 원하는 너비로 조정 */
+  flex-shrink: 0; /* 레이블 크기 유지 */
+}
+
+.detail-row {
+  display: flex;
+  align-items: center; /* 세로 정렬 */
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.detail-value {
+  color: #6d4c41;
+  flex-grow: 1; /* 남은 공간 차지 */
+  text-align: right; /* 값을 오른쪽 정렬 */
+}
 .sort-buttons {
   display: flex;
   gap: 10px;
