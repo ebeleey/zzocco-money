@@ -1,5 +1,22 @@
 <template>
   <div class="data-table">
+    <!-- 정렬 버튼 -->
+    <div class="sort-buttons">
+      <button
+        :class="{ active: sortKey === 'intr_rate2' }"
+        @click="sortKey = 'intr_rate2'"
+      >
+        최고 우대금리로 정렬
+      </button>
+      <button
+        :class="{ active: sortKey === 'intr_rate' }"
+        @click="sortKey = 'intr_rate'"
+      >
+        기본금리로 정렬
+      </button>
+    </div>
+
+    <!-- 데이터 테이블 -->
     <table>
       <thead>
         <tr>
@@ -11,23 +28,46 @@
           <th>가입 대상</th>
         </tr>
       </thead>
+
       <tbody>
-        <!-- 필터링 및 정렬된 상품 출력 -->
-        <tr v-for="(product, index) in sortedProducts" :key="product.id">
-          <td>{{ index + 1 }}</td>
-          <td>{{ product.bank }}</td>
-          <td>{{ product.name }}</td>
-          <td>{{ product.basicRate }}%</td>
-          <td>{{ product.maxRate }}%</td>
-          <td>{{ product.eligibility }}</td>
+        <tr v-for="(product, index) in paginatedProducts" :key="product.id">
+          <td>{{ (currentPage - 1) * itemsPerPage + index + 1 }}</td>
+          <td>
+            {{ activeTab === 'deposit' ? product.deposit_id__kor_co_nm : product.saving_id__kor_co_nm }}
+          </td>
+          <td>
+            {{ activeTab === 'deposit' ? product.deposit_id__fin_prdt_nm : product.saving_id__fin_prdt_nm }}
+          </td>
+          <td>{{ product.intr_rate }}%</td>
+          <td>{{ product.intr_rate2 }}%</td>
+          <td>
+            {{
+              activeTab === 'deposit'
+                ? joinDenyMapping[product.deposit_id__join_deny]
+                : joinDenyMapping[product.saving_id__join_deny]
+            }}
+          </td>
         </tr>
       </tbody>
     </table>
+
+    <!-- 페이지네이션 -->
+    <div class="pagination">
+      <button
+        v-for="page in totalPages"
+        :key="page"
+        :class="{ active: currentPage === page }"
+        @click="currentPage = page"
+      >
+        {{ page }}
+      </button>
+    </div>
   </div>
 </template>
 
+
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 // Props 정의
 const props = defineProps({
@@ -35,37 +75,146 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  products: {
+    type: Array,
+    required: true,
+  },
+  activeTab: {
+    type: String,
+    required: true,
+  }
 });
 
-// 더미 데이터 (실제 데이터는 API로 받아올 예정)
-const products = [
-  { id: 1, bank: "은행A", name: "상품1", basicRate: 1.5, maxRate: 2.5, period: "1개월", calculation: "단리", region: "서울", eligibility: "전체", method: "온라인", condition: "특정 조건" },
-  { id: 2, bank: "은행B", name: "상품2", basicRate: 1.2, maxRate: 2.8, period: "3개월", calculation: "복리", region: "경기", eligibility: "청년", method: "영업점", condition: "가입조건 없음" },
-  // 더 많은 데이터 추가 가능
-];
 
-// 필터링된 데이터 계산
+
+// 페이지네이션
+const itemsPerPage = 30; // 한 페이지당 항목 수
+const currentPage = ref(1); // 현재 페이지
+
+// 정렬 기준 (초기값: 최고 우대금리)
+const sortKey = ref("intr_rate2");
+
+const joinDenyMapping = {
+  1: "제한없음",
+  2: "서민전용",
+  3: "일부제한",
+};
+
 const filteredProducts = computed(() => {
-  return products.filter((product) => {
-    const matchesPeriod = product.period === props.filters.savingsPeriod;
-    const matchesSector = product.bank === props.filters.financialSector || props.filters.financialSector === "전체";
-    const matchesCalculation = product.calculation === props.filters.interestCalculation || props.filters.interestCalculation === "전체";
-    const matchesRegion = props.filters.regions.length === 0 || props.filters.regions.includes(product.region);
-    const matchesEligibility = props.filters.eligibility.length === 0 || props.filters.eligibility.includes(product.eligibility);
-    const matchesMethod = props.filters.applicationMethods.length === 0 || props.filters.applicationMethods.includes(product.method);
-    const matchesCondition = props.filters.benefitConditions.length === 0 || props.filters.benefitConditions.includes(product.condition);
+  return props.products.filter((product) => {
+    const matchesPeriod =
+      props.filters.savingsPeriod.length === 0 ||
+      props.filters.savingsPeriod.includes(product.save_trm);
+    const matchesCalculation =
+      product.intr_rate_type_nm === props.filters.interestCalculation ||
+      props.filters.interestCalculation === "전체";
+    const matchesEligibility =
+      props.filters.eligibility.length === 0 ||
+      props.filters.eligibility.includes(
+        activeTab.value === "deposit"
+          ? product.deposit_id__join_deny
+          : product.saving_id__join_deny
+      );
+    const matchesMethod =
+      props.filters.applicationMethods.length === 0 ||
+      props.filters.applicationMethods.includes(
+        activeTab.value === "deposit"
+          ? product.deposit_id__join_way
+          : product.saving_id__join_way
+      );
+    const matchesCondition =
+      props.filters.benefitConditions.length === 0 ||
+      props.filters.benefitConditions.includes(
+        activeTab.value === "deposit"
+          ? product.deposit_id__spcl_cnd
+          : product.saving_id__spcl_cnd
+      );
 
-    return matchesPeriod && matchesSector && matchesCalculation && matchesRegion && matchesEligibility && matchesMethod && matchesCondition;
+    return (
+      matchesPeriod &&
+      matchesCalculation &&
+      matchesEligibility &&
+      matchesMethod &&
+      matchesCondition
+    );
   });
 });
 
-// 정렬된 데이터 계산 (우대 금리 순으로 정렬)
+
+
 const sortedProducts = computed(() => {
-  return [...filteredProducts.value].sort((a, b) => b.maxRate - a.maxRate);
+  return [...filteredProducts.value].sort((a, b) => b[sortKey.value] - a[sortKey.value]);
+});
+
+const totalPages = computed(() => {
+  return Math.ceil(sortedProducts.value.length / itemsPerPage);
+});
+
+// 현재 페이지 데이터 계산
+const paginatedProducts = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return sortedProducts.value.slice(startIndex, endIndex);
 });
 </script>
 
 <style scoped>
+.sort-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: flex-end;
+}
+
+
+.sort-buttons button {
+  background-color: #3f2411;
+
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sort-buttons button.active {
+  background-color: #6d4c41;
+  color: white;
+  font-weight: bold;
+}
+
+.sort-buttons button:hover {
+  background-color: #6d4c41;
+  color: white;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 8px 12px;
+  margin: 0 5px;
+  /* border: 1px solid #ccc; */
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #3f2411;
+  color: white;
+  font-weight: bold;
+  border: 1px solid #3f2411;
+}
+
+.pagination button:hover {
+  background-color: #6d4c41;
+  color: white;
+}
+
 .data-table {
   width: 100%;
 }
