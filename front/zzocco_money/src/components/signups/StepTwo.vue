@@ -172,10 +172,13 @@
     </form>
     <br>
 
-    <!-- '이전' 버튼 추가 -->
-    <button @click="$emit('previous-step')">이전</button>
-    <!-- '다음' 버튼 추가 -->
-    <button @click="$emit('next-step')">다음</button>
+    <div class="button-container">
+      <!-- '이전' 버튼 추가 -->
+      <button @click="$emit('previous-step')">이전</button>
+      <!-- '다음' 버튼 추가 -->
+      <button @click="$emit('next-step')">다음</button>
+      
+    </div>
   </div>
 </template>
 
