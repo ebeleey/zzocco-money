@@ -3,14 +3,6 @@
     <!-- 단일 선택: 저축 예정 기간 -->
     <div class="filter-group">
       <h3>저축 예정 기간</h3>
-
-      <!-- <select v-model="selectedSavingsPeriod" @change="updateFilters">
-        <option v-for="period in savingsPeriod" :key="period" :value="period">
-          {{ period }}
-        </option>
-      </select> -->
-
-      <!-- 버튼 리스트 -->
       <div class="button-group">
         <button
           v-for="period in savingsPeriod"
@@ -33,14 +25,20 @@
       </select>
     </div>
     <hr> -->
+
     <!-- 단일 선택: 이자 계산 방식 -->
     <div class="filter-group">
       <h3>이자 계산 방식</h3>
-      <select v-model="selectedInterestCalculation" @change="updateFilters">
-        <option v-for="calculation in interestCalculation" :key="calculation" :value="calculation">
+      <div class="button-group">
+        <button
+          v-for="calculation in interestCalculation"
+          :key="calculation"
+          :class="{ active: selectedInterestCalculation === calculation }"
+          @click="selectInterestCalculation(calculation)"
+        >
           {{ calculation }}
-        </option>
-      </select>
+        </button>
+      </div>
     </div>
 
     <hr>
@@ -69,10 +67,8 @@
       </div>
     </div>
 
-    <hr>
-
     <!-- 다중 선택: 우대 조건 -->
-    <div class="filter-group">
+    <!-- <div class="filter-group">
       <h3>우대 조건</h3>
       <div v-for="condition in benefitConditions" :key="condition">
         <label>
@@ -80,7 +76,7 @@
           {{ condition }}
         </label>
       </div>
-    </div>
+    </div> -->
 
   </div>
 </template>
@@ -90,8 +86,6 @@ import { ref } from "vue";
 
 // 단일 선택 옵션
 
-
-// const savingsPeriod = ["1개월", "3개월", "6개월", "12개월", "24개월", "36개월"];
 const savingsPeriod = [1, 3, 6, 12, 24, 36]
 // const financialSector = ["전체", "은행", "저축은행", "신협조합"];
 const interestCalculation = ["전체", "단리", "복리"];
@@ -99,17 +93,15 @@ const eligibility = ["제한없음", "서민전용", "일부제한"];
 const applicationMethod = [
   "전체", "영업점", "인터넷", "스마트폰", "모집인", "전화(텔레뱅킹)", "기타"
 ];
-const benefitConditions = [
-  "비대면 가입", "재예치", "주거래(급여, 연금 이체 등)", "첫거래", "연령", "타상품가입·실적"
-];
+// const benefitConditions = [
+//   "비대면 가입", "재예치", "주거래(급여, 연금 이체 등)", "첫거래", "연령", "타상품가입·실적"
+// ];
+
 const selectedSavingsPeriod = ref([]);
-
-// const selectedFinancialSector = ref(financialSector[0]);
 const selectedInterestCalculation = ref(interestCalculation[0]);
-
 const selectedEligibility = ref([]);
 const selectedApplicationMethods = ref([]);
-const selectedBenefitConditions = ref([]);
+// const selectedBenefitConditions = ref([]);
 
 // 부모 컴포넌트로 이벤트 전달
 const emit = defineEmits(["update-filters"]); // 이벤트 정의
@@ -132,7 +124,10 @@ const togglePeriod = (period) => {
   updateFilters(); // 필터 업데이트
 };
 
-
+const selectInterestCalculation = function (calculation) {
+  selectedInterestCalculation.value = calculation
+  updateFilters()
+}
 // 부모 컴포넌트로 필터 업데이트 전달
 const updateFilters = () => {
   const filters = {
@@ -141,9 +136,10 @@ const updateFilters = () => {
     interestCalculation: selectedInterestCalculation.value,
     eligibility: selectedEligibility.value,
     applicationMethods: selectedApplicationMethods.value,
-    benefitConditions: selectedBenefitConditions.value,
+    // benefitConditions: selectedBenefitConditions.value,
   };
   // 이벤트로 부모 컴포넌트에 전달
+
   emit("update-filters", filters);
 };
 </script>

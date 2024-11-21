@@ -41,7 +41,6 @@ const activeTab = ref("deposit"); // 기본값: 정기예금
 // 탭 전환 함수
 const switchTab = async (tab) => {
   activeTab.value = tab;
-  console.log(tab)
   await fetchData(); // 탭 전환 시 데이터 로드
 
 };
@@ -49,16 +48,15 @@ const switchTab = async (tab) => {
 const deposits = ref([])
 const savings = ref([])
 
-
-
-// 필터 상태 관리
-const filters = ref({
-  financialSector: "전체", // 기본값
-  interestCalculation: "전체", // 기본값
+const initialFilters = {
+  savingsPeriod: [], // 모든 기간 허용
+  interestCalculation: '전체',
   eligibility: [],
   applicationMethods: [],
-  benefitConditions: [],
-});
+}
+
+// 필터 상태 관리
+const filters = ref(initialFilters);
 
 const currentProducts = computed(() => {
   return activeTab.value == "deposit" ? deposits.value : savings.value
@@ -125,6 +123,7 @@ onMounted(() => {
   color: white; */
   background-color: #ffffff28;
   font-weight: bold;
+  
 }
 
 .page-title {
