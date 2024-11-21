@@ -6,8 +6,9 @@ from django.http import JsonResponse
 from .serializers import DepositSerializer, DepositOptionSerializer, SavingSerializer, SavingOptionSerializer
 from .models import Deposit, DepositOption, Saving, SavingOption
 from django.shortcuts import get_object_or_404
-from django.db.models import Max
+from django.db.models import Prefetch
 from django.conf import settings
+
 
 # # Create your views here.
 from django.conf import settings
@@ -85,20 +86,39 @@ def getDeposit(request):
             if serializer.is_valid(raise_exception=True):
                 serializer.save(deposit_id=deposit_id)
 
-    deposits = Deposit.objects.all()
-    deposit_serializer = DepositSerializer(deposits, many=True)
-    
-    options = DepositOption.objects.all()
-    option_serializer = DepositOptionSerializer(options, many=True)
-    
-    # Combine and return data
-    data = {
-        "deposit": deposit_serializer.data,
-        "depositOption": option_serializer.data,
-    }
+    # # DepositOption을 미리 필터링하거나, 전체를 가져오고자 할 때
+    # deposit_options = DepositOption.objects.all()
 
-    return Response(data)
+    # # Deposit 객체를 가져오면서 DepositOption을 미리 가져오기
+    # deposits = Deposit.objects.prefetch_related(Prefetch('options', queryset=deposit_options))
 
+    # # Serializer에서 options를 포함한 Deposit 데이터를 반환
+    # deposits_serializer = DepositSerializer(deposits, many=True)
+    
+    # data = {
+    #     "deposit": deposits_serializer.data  # Deposit data with nested options
+    # }
+    options = DepositOption.objects.select_related('deposit_id').values(
+        'deposit_id__fin_co_no',
+        'deposit_id__kor_co_nm',
+        'deposit_id__fin_prdt_cd',
+        'deposit_id__fin_prdt_nm',
+        'deposit_id__join_way',
+        'deposit_id__join_deny',
+        'deposit_id__join_member',
+        'deposit_id__spcl_cnd',
+        'deposit_id__etc_note',
+        'deposit_id__max_limit',
+        'intr_rate_type',
+        'intr_rate_type_nm',
+        'save_trm',
+        'intr_rate',
+        'intr_rate2',
+    )
+
+    return JsonResponse(list(options), safe=False)
+
+    # return Response(data)
 
 @api_view(['GET'])
 def getSaving(request):
@@ -176,15 +196,24 @@ def getSaving(request):
             if serializer.is_valid(raise_exception=True):
                 serializer.save(saving_id=saving_id)
 
-    savings = Saving.objects.all()
-    saving_serializer = SavingSerializer(savings, many=True)
-    
-    options = SavingOption.objects.all()
-    option_serializer = SavingOptionSerializer(options, many=True)
-    
-    # Combine and return data
-    data = {
-        "saving": saving_serializer.data,
-        "savingOption": option_serializer.data,
-    }
-    return Response(data)
+    options = SavingOption.objects.select_related('saving_id').values(
+        'saving_id__fin_co_no',
+        'saving_id__fin_prdt_cd',
+        'saving_id__kor_co_nm',
+        'saving_id__fin_prdt_nm',
+        'saving_id__join_way',
+        'saving_id__join_deny',
+        'saving_id__join_member',
+        'saving_id__spcl_cnd',
+        'saving_id__etc_note',
+        'saving_id__max_limit',
+        'intr_rate_type',
+        'intr_rate_type_nm',
+        'rsrv_type',
+        'rsrv_type_nm',
+        'save_trm',
+        'intr_rate',
+        'intr_rate2',
+    )
+
+    return JsonResponse(list(options), safe=False)
