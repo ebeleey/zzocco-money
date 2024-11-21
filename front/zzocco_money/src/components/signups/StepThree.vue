@@ -12,11 +12,13 @@
 			</div>
 		</form>
         <br>
-		<!-- '이전' 버튼 추가 -->
-		<button @click="$emit('previous-step')">이전</button>
-
-		<!-- '회원가입 완료' 버튼 -->
-		<button @click="$emit('submit')">회원가입 완료</button>
+        <div class="button-container">
+            <!-- '이전' 버튼 추가 -->
+            <button @click="$emit('previous-step')">이전</button>
+    
+            <!-- '회원가입 완료' 버튼 -->
+            <button @click="$emit('submit')">회원가입 완료</button>
+        </div>
 
 		
 
