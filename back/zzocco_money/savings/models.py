@@ -23,7 +23,7 @@ class DepositOption(models.Model):
     intr_rate_type = models.CharField(max_length=10)    # 저축 금리 유형
     intr_rate_type_nm = models.CharField(max_length=100)    # 저축 금리 유형명
     save_trm = models.IntegerField()    # 저축 기간
-    intr_rate = models.DecimalField(max_digits=5, decimal_places=2)     # 저축 금리(소수점 2자리)
+    intr_rate = models.DecimalField(max_digits=5, decimal_places=2, null=True)     # 저축 금리(소수점 2자리)
     intr_rate2 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)     # 최고 우대 금리(소수점 2자리)
 
 
@@ -50,5 +50,5 @@ class SavingOption(models.Model):
     rsrv_type = models.CharField(null=True, max_length=10)     # 적립 유형
     rsrv_type_nm = models.CharField(null=True, max_length=50)  # 적립 유형명
     save_trm = models.IntegerField()    # 저축 기간
-    intr_rate = models.DecimalField(max_digits=5, decimal_places=2)     # 저축 금리(소수점 2자리)
+    intr_rate = models.DecimalField(max_digits=5, decimal_places=2, null=True)     # 저축 금리(소수점 2자리)
     intr_rate2 = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)     # 최고 우대 금리(소수점 2자리)
