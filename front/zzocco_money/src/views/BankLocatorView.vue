@@ -16,6 +16,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import SearchBar from '@/components/banklocator/SearchBar.vue'
+import dotenv from 'dotenv'
 
 // 행정구역 데이터
 const citiesData = ref({
@@ -86,6 +87,8 @@ const selectedBank = ref("")
 const mapContainer = ref(null)
 const map = ref(null)
 const infowindow = ref(null)
+
+const APP_KEY = import.meta.env.VITE_APP_API_KEY
 
 // 검색 시 콜백함수 호출
 const updateSelection = (selection) => {
@@ -158,7 +161,7 @@ const displayMarker = (place) => {
 // 스크립트 로드하기
 const loadScript = () => {
   const script = document.createElement('script')
-  script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=68799a6f0e50c66be5431b0a5e7e7628&libraries=services&autoload=false`
+  script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${APP_KEY}&libraries=services&autoload=false`
   script.onload = () => window.kakao.maps.load(() => {
     initMap()
     searchPlaces()
