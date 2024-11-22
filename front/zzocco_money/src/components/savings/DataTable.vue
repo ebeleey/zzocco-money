@@ -394,29 +394,26 @@ defineExpose({
 .pagination {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin: 20px 0;
+  color: white;
+
 }
 
 .pagination button {
   padding: 8px 12px;
   margin: 0 5px;
-  /* border: 1px solid #ccc; */
-  background-color: white;
-  color: black;
   border-radius: 5px;
+  font-size: 14px;
   cursor: pointer;
 }
 
 .pagination button.active {
   background-color: #3f2411;
-  color: white;
   font-weight: bold;
-  border: 1px solid #3f2411;
 }
 
 .pagination button:hover {
-  background-color: #6d4c41;
-  color: white;
+  background-color: #3f2411;
 }
 
 .data-table {
