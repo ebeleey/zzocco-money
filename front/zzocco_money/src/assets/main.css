@@ -32,4 +32,38 @@ body {
   font-family: 'Pretendard-Regular', sans-serif !important;
   background-color: #aa887b; 
   color: #25150a;
+<<<<<<< Updated upstream
 }
+=======
+  margin-bottom: 50px;
+  height: 100%;
+  
+
+}
+
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px; /* 콘텐츠가 테두리에서 떨어지도록 설정 */
+  box-sizing: border-box; /* 요소의 총 너비를 max-width로 제한 */
+}
+
+h1 {
+  font-family: 'HSJiptokki-Black', sans-serif;
+  color: #3f2411;
+  text-align: center;
+  margin-top: 70px; 
+  margin-bottom: 50px; 
+  font-weight: bold;
+}
+
+.page-title {
+  font-size: 48px;
+  text-align: center;
+  margin-top: 70px; 
+  margin-bottom: 50px; 
+  font-weight: bold;
+}
+
+
+>>>>>>> Stashed changes

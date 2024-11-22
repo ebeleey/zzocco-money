@@ -5,7 +5,12 @@
 		
 		<div class="signup-form-container">
 			<h1>회원 가입</h1>
+<<<<<<< Updated upstream
 			<p>이미 가입한 계정이 있다면 <span @click="goToLogin">로그인</span>해주세요.
+=======
+      
+			<p class="login-link">이미 가입한 계정이 있다면 <RouterLink to="/login">로그인 </RouterLink>해주세요.
+>>>>>>> Stashed changes
       </p>
 
 		
@@ -71,6 +76,7 @@ const handleSubmit = () => {
 </script>
   
 <style>
+<<<<<<< Updated upstream
   span {
     text-decoration: underline;
   }
@@ -178,4 +184,133 @@ const handleSubmit = () => {
     font-size: 16px;
   }
   </style>
+=======
+
+h1 {
+	margin: 20px;
+	font-size: 36px;
+}
+
+span {
+  text-decoration: underline;
+}
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #eaeaea;
+}
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+}
+.nav-links li {
+  display: inline;
+}
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+}
+button {
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+
+  background-color: #583423;
+  color: #fff;
+  border-radius: 5px;
+}
+.login-button {
+  background-color: transparent;
+  color: #333;
+}
+
+.login-link a {
+	text-decoration: solid;
+	color: #000000;
+}
+
+.signup-button {
+  background-color: #333;
+  color: #fff;
+}
+
+/* Signup Form */
+.signup-form-container {
+  max-width: 500px;
+	margin: 60px auto 0;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.signup-form-container p {
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.step {
+  flex: 1;
+  text-align: center;
+  padding: 5px 0;
+  border-bottom: 2px solid #ddd;
+  color: #999;
+}
+.step.active {
+  border-bottom: 2px solid #333;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+/* button {
+	margin: 0 20px 0;
+	padding: 5px 30px 5px;
+} */
+</style>
+>>>>>>> Stashed changes
   

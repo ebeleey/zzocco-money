@@ -9,5 +9,15 @@
 </script>
 
 <style scoped>
+<<<<<<< Updated upstream
+=======
+
+.bank-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+>>>>>>> Stashed changes
 
 </style>
