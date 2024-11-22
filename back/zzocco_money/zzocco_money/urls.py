@@ -23,5 +23,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('savings/', include('savings.urls')),
     path('articles/', include('articles.urls')),
+    path('currency/', include('currency.urls'))
     # path('accounts/', include('dj_rest_auth.urls')),
 ]

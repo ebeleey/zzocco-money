@@ -1,16 +1,17 @@
 <template>
   <div>
     <h1 class="page-title">환율 계산기</h1>
+
     <div class="currency-converter">
+
       <div class="input-container">
-        <label>Amount</label>
         <div class="currency-input">
-          <select v-model="fromCurrency" @change="convertCurrency">
-            <option v-for="currency in currencyList" :key="currency" :value="currency">
+          <select v-model="fromCurrency">
+            <option v-for="currency in currencies" :key="currency" :value="currency">
               {{ currency }}
             </option>
           </select>
-          <input type="number" v-model="amount" @input="convertCurrency" />
+          <input class="amount" v-model.number="amount" type="number" />
         </div>
       </div>
 
@@ -21,14 +22,13 @@
       </div>
 
       <div class="input-container">
-        <label>Converted Amount</label>
         <div class="currency-input">
-          <select v-model="toCurrency" @change="convertCurrency">
-            <option v-for="currency in currencyList" :key="currency" :value="currency">
+          <select v-model="toCurrency">
+            <option v-for="currency in currencies" :key="currency" :value="currency">
               {{ currency }}
             </option>
           </select>
-          <input type="text" :value="convertedAmount" readonly />
+          <input class="amount" type="text" :value="convertedAmount" readonly />
         </div>
       </div>
     </div>
@@ -36,80 +36,96 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { ref, onMounted, watch } from "vue";
+import axios from "axios";
 
 export default {
-  name: 'CurrencyConverter',
-  data() {
-    return {
-      amount: 1,
-      fromCurrency: 'USD',
-      toCurrency: 'KRW',
-      currencyList: [],
-      rates: null,
-      convertedAmount: ''
-    }
-  },
-  async created() {
-    try {
-      const response = await axios.get('http://localhost:3000/api/exchange-rates');
-      this.rates = response.data.rates;
-      this.currencyList = Object.keys(this.rates).sort();
-      this.convertCurrency();
-    } catch (error) {
-      console.error('환율 정보를 가져오는데 실패했습니다:', error);
-    }
-  },
-  methods: {
-    convertCurrency() {
-      if (!this.rates || !this.amount) return;
+  setup() {
+    const fromCurrency = ref("KRW");
+    const toCurrency = ref("USD");
+    const amount = ref(1);
+    const convertedAmount = ref();
+    const currencies = ref([]);
 
-      const fromRate = this.rates[this.fromCurrency];
-      const toRate = this.rates[this.toCurrency];
-      const converted = ((this.amount / fromRate) * toRate).toFixed(2);
-      this.convertedAmount = `${converted} ${this.toCurrency}`;
-    },
-    swapCurrencies() {
-      [this.fromCurrency, this.toCurrency] = [this.toCurrency, this.fromCurrency];
-      this.convertCurrency();
-    }
+    // 환율 데이터 가져오기
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:8000/currency/get_exchange_rates/"
+        );
+        currencies.value = Object.keys(response.data); // 통화 목록
+      } catch (error) {
+        console.error("Error fetching exchange rates:", error);
+      }
+    };
+
+    // 통화 변환 요청
+    const convert = async () => {
+      if (!fromCurrency.value || !toCurrency.value || !amount.value) {
+        convertedAmount.value = null;
+        return;
+      }
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:8000/currency/convert/",
+          {
+            amount: amount.value,
+            from_currency: fromCurrency.value,
+            to_currency: toCurrency.value,
+          }
+        );
+        convertedAmount.value = response.data.result;
+      } catch (error) {
+        console.error("Error in currency converter:", error);
+      }
+    };
+
+    // 컴포넌트가 마운트될 때 환율 데이터 가져오기
+    onMounted(() => {
+      fetchData();
+    });
+
+    // 값 변경 시 변환 수행
+    watch([fromCurrency, toCurrency, amount], convert);
+
+    return {
+      fromCurrency,
+      toCurrency,
+      amount,
+      convertedAmount,
+      currencies,
+      convert
+    };
   }
-}
+};
 </script>
 
 <style scoped>
-.page-title {
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #333;
-}
 
 .currency-converter {
   max-width: 600px;
   margin: 0 auto;
-  padding: 2rem;
-  background-color: #fff;
+  padding: 40px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 20px;
+  border: 1px solid #ddd;
+}
+
+.amount {
+  text-align: right;
 }
 
 .input-container {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-}
-
-.input-container label {
-  font-size: 0.9rem;
-  color: #666;
+  gap: 10px;
 }
 
 .currency-input {
   display: flex;
-  gap: 1rem;
+  gap: 20px;
 }
 
 .currency-input select,
@@ -138,7 +154,6 @@ export default {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.5rem;
   transition: transform 0.2s;
 }
 
@@ -147,11 +162,12 @@ export default {
 }
 
 .convert-icon img {
-  width: 24px;
-  height: 24px;
+  width: 50px;
+  height: 50px;
 }
 
 input[readonly] {
   background-color: #f5f5f5;
 }
+
 </style>
