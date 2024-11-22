@@ -16,7 +16,6 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import SearchBar from '@/components/banklocator/SearchBar.vue'
-import dotenv from 'dotenv'
 
 // 행정구역 데이터
 const citiesData = ref({
