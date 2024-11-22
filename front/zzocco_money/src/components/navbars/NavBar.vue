@@ -56,6 +56,9 @@
                 >로그인</RouterLink
               >
             </li>
+            <li v-if="isLogin" class="nav-item">
+              <button @click="logout" class="nav-link">로그아웃</button>
+            </li>
           </ul>
         </div>
       </div>
@@ -65,10 +68,21 @@
 
 <script setup>
 import { useAccountStore } from '@/stores/account'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router';
 
 const store = useAccountStore()
-const isLogin = store.isLogin
+const router = useRouter()
+
+// 로그인 상태 즉각 적용
+const isLogin = computed(() => store.isLogin)
+
+// 로그아웃 함수
+const logout = () => {
+  store.logout()  // 로그아웃 처리
+  // 로그아웃 후 홈으로 리디렉션
+  router.push({ name: 'home' })
+}
 
 
 </script>

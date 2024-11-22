@@ -25,6 +25,7 @@ export const useAccountStore = defineStore('account', () => {
       })
       .catch(err => console.log(err))
   }
+
   const isLogin = computed(() => {
     if (token.value === null) {
       return false
@@ -33,5 +34,9 @@ export const useAccountStore = defineStore('account', () => {
     }
   })
 
-  return { logIn, token, isLogin }
+  const logout = function () {
+    token.value = null
+  }
+
+  return { logIn, token, isLogin, logout }
 }, { persist: true }) 
