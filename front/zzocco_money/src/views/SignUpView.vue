@@ -5,7 +5,8 @@
 		
 		<div class="signup-form-container">
 			<h1>회원 가입</h1>
-			<p class="login-link">이미 가입한 계정이 있다면 <RouterLink to="/login">로그인 </RouterLink>해주세요.
+			<p class="login-link">
+        이미 가입한 계정이 있다면 <RouterLink to="/login">로그인 </RouterLink>해주세요.
       </p>
 
 		
@@ -158,10 +159,6 @@ button {
   border-radius: 5px;
   background-color: #fff;
 }
-.signup-form-container h1 {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
 .signup-form-container p {
   margin-bottom: 20px;
   color: #666;
@@ -218,4 +215,5 @@ button {
 	padding: 5px 30px 5px;
 } */
 </style>
+
   

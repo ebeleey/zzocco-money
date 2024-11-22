@@ -63,6 +63,19 @@ body {
 
 h1 {
   font-family: 'HSJiptokki-Black', sans-serif;
-  font-size: 50px;
   color: #3f2411;
+  text-align: center;
+  margin-top: 70px; 
+  margin-bottom: 50px; 
+  font-weight: bold;
 }
+
+.page-title {
+  font-size: 48px;
+  text-align: center;
+  margin-top: 70px; 
+  margin-bottom: 50px; 
+  font-weight: bold;
+}
+
+

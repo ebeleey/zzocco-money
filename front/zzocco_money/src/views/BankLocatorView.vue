@@ -180,16 +180,14 @@ watch([selectedProvince, selectedCity, selectedBank], () => {
 </script>
 
 <style scoped>
-h1 {
-	margin: 50px 0 50px;
-	text-align: center;
-}
+
 .bank-view {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
+
 
 .mapContainer {
   margin-top: 50px;
