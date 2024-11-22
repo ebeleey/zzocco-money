@@ -20,6 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(DEBUG=(bool, True))
 environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 API_KEY = env('API_KEY')  # .env 파일에 작성된 API_KEY 값을 API_KEY 변수에 대입
+CURRENCY_API_KEY = env('CURRENCY_API_KEY')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -39,6 +40,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Application definition
 INSTALLED_APPS = [
+    'currency',
     'accounts',
     'articles',
     'savings',
