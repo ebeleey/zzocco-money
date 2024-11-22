@@ -95,6 +95,9 @@ const handleSubmit = () => {
 </script>
   
 <style>
+h1 {
+  margin: 20px;
+}
 span {
   text-decoration: underline;
 }
