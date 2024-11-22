@@ -7,6 +7,7 @@ import axios from 'axios'
 export const useAccountStore = defineStore('account', () => {
   const router = useRouter()
   const token = ref(null)
+
   const logIn = function (payload) {
     const username = payload.username
     const password = payload.password
@@ -24,6 +25,13 @@ export const useAccountStore = defineStore('account', () => {
       })
       .catch(err => console.log(err))
   }
+  const isLogin = computed(() => {
+    if (token.value === null) {
+      return false
+    } else {
+      return true
+    }
+  })
 
-  return { logIn, token }
+  return { logIn, token, isLogin }
 }, { persist: true }) 

@@ -41,17 +41,17 @@
                 >커뮤니티</RouterLink
               >
             </li>
-            <li class="nav-item">
+            <li v-if="isLogin" class="nav-item">
               <RouterLink class="nav-link" :to="{ name: 'profile' }"
                 >마이페이지</RouterLink
               >
             </li>
-            <li class="nav-item">
+            <li v-if="!isLogin" class="nav-item">
               <RouterLink class="nav-link" :to="{ name: 'signup' }"
                 >회원가입</RouterLink
               >
             </li>
-            <li class="nav-item">
+            <li v-if="!isLogin" class="nav-item">
               <RouterLink class="nav-link" :to="{ name: 'login' }"
                 >로그인</RouterLink
               >
@@ -64,6 +64,13 @@
 </template>
 
 <script setup>
+import { useAccountStore } from '@/stores/account'
+import { ref } from 'vue'
+
+const store = useAccountStore()
+const isLogin = store.isLogin
+
+
 </script>
 
 <style scoped>
