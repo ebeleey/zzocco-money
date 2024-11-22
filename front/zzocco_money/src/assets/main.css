@@ -27,14 +27,27 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'BagelFatOne-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_JAMO@1.0/BagelFatOne-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
 
+@font-face {
+  font-family: 'HSJiptokki-Black';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/HSJiptokki-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+}
+
+html {
+  overflow-y: scroll; /* 항상 세로 스크롤바를 표시 */
+}
 body {
   font-family: 'Pretendard-Regular', sans-serif !important;
-  background-color: #aa887b; 
+  /* background-color: #aa887b;  */
   color: #25150a;
-<<<<<<< Updated upstream
-}
-=======
   margin-bottom: 50px;
   height: 100%;
   
@@ -66,4 +79,3 @@ h1 {
 }
 
 
->>>>>>> Stashed changes

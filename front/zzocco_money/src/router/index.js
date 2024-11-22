@@ -8,6 +8,8 @@ import CommunityView from '@/views/CommunityView.vue'
 import RecommendView from '@/views/RecommendView.vue'
 import BankLocatorView from '@/views/BankLocatorView.vue'
 import SavingsView from '@/views/SavingsView.vue'
+import DetailView from '@/views/DetailView.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,7 +47,12 @@ const router = createRouter({
     {
       path: '/community',
       name: 'community',
-      component: CommunityView
+      component: CommunityView,
+    },
+    {
+      path: '/articles/:id',
+      name: 'DetailView',
+      component: DetailView
     },
     {
       path: '/recommend',
@@ -56,7 +63,7 @@ const router = createRouter({
       path: '/bank_locator',
       name: 'bank-locator',
       component: BankLocatorView
-    }
+    },
   ],
 })
 

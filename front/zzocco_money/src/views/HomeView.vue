@@ -12,13 +12,6 @@
         </button>
       </div>
     </main>
-<<<<<<< Updated upstream
-    <footer class="bg-gray-100 text-center py-4 text-sm">
-      © 2024 Better Actions. All rights reserved.
-    </footer>
-=======
-
->>>>>>> Stashed changes
   </div>
 </template>
 

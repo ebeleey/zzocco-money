@@ -7,8 +7,8 @@
 			</div>
 
 			<div class="form-group">
-				<label for="email">아이디</label>
-				<input type="email" id="email" v-model="formData.basicInfo.email" placeholder="이메일을 입력하세요." required />
+				<label for="username">아이디</label>
+				<input type="username" id="username" v-model="formData.basicInfo.username" placeholder="아이디를 입력하세요." required />
 			</div>
 
 			<div class="form-group">
@@ -18,15 +18,15 @@
 
 			<div class="form-group">
 				<label for="passwordConfirm">비밀번호 확인</label>
-				<input type="password" id="passwordConfirm" v-model="passwordConfirm" placeholder="비밀번호를 확인하세요." required />
+				<input type="password" id="passwordConfirm" v-model="passwordConfirm" placeholder="비밀번호를 한번 더 입력해주세요." required />
 			</div>
 		</form>
 		<br>
-		<!-- '이전' 버튼 추가 -->
-		<button @click="$emit('previous-step')">이전</button>
-
-		<!-- '회원가입 완료' 버튼 -->
-		<button @click="nextStep">다음</button>
+		<div class="button-container">
+	
+			<!-- '회원가입 완료' 버튼 -->
+			<button @click="nextStep">다음</button>
+		</div>
 	</div>
 </template>
   
@@ -52,5 +52,9 @@ const nextStep = function() {
   
 
 <style scoped>
-
+.button-container {
+  display: flex;
+  justify-content: flex-end;  /* 오른쪽 끝에 위치 */
+  margin-top: 10px;
+}
 </style>
