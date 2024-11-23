@@ -20,7 +20,7 @@
           href="#" 
           @click.prevent="selectTab('금융꿀팁')"
         >
-          금융 꿀팁
+          금융꿀팁
         </a>
       </li>
       <li class="nav-item">
@@ -35,8 +35,12 @@
       </li>
     </ul>
     <hr>
+
     <!-- 게시글 목록 -->
     <div v-if="isLoading"></div>
+
+    <p v-else-if="!articles.length" style="text-align: center;">아직 작성된 게시글이 없습니다.</p>
+    
     <ul v-else class="article-list">
       <li v-for="(article, index) in paginatedArticles" :key="index" class="article-item">
         <div class="article-category">
@@ -48,7 +52,7 @@
           </RouterLink>
           <p class="article-meta">
             <!-- <img :src="article.profile_image" alt="프로필 이미지" class="profile-img" /> -->
-            작성자: {{ article.user }} &nbsp |  &nbsp
+            작성자: {{ article.user.username }} &nbsp |  &nbsp
             작성시간: {{ article.created_at.slice(0, 10) }}  {{ article.created_at.slice(11, 16) }}
           </p>
         </div>
@@ -59,6 +63,11 @@
       </li>
     </ul>
 
+    <div style="justify-content: flex-end; display: flex;">
+      <button style="margin-top: 20px;">
+        <RouterLink to="articles/post/" style="text-decoration: none; color: white;">게시글 작성하기</RouterLink>
+      </button>
+    </div>
 
     <!-- 페이지네이션 -->
     <div class="pagination">
@@ -72,7 +81,7 @@
       </button>
     </div>
     <!-- 검색 바 -->
-    <!-- <form class="search-bar" @submit="handleSearch" role="search">
+    <form class="search-bar" @submit="handleSearch" role="search">
       <input 
         v-model="searchQuery" 
         class="form-control me-2" 
@@ -81,7 +90,7 @@
         aria-label="Search"
       />
       <button class="btn btn-outline-success" type="submit">검색</button>
-    </form> -->
+    </form>
   </div>
 </template>
 
@@ -97,48 +106,11 @@ const isLoading = ref(true)
 const articles = computed(() => communityStore.articles)
 
 onMounted(() => {
-  communityStore.getArticles()
-  console.log('안돼~~~~')
-  console.log(communityStore.articles)
-  console.log('왜안돼?')
-  console.log(articles)
   if (articles.value) {
     isLoading.value = false
   }
 })
-// 더미 데이터
 
-// const articles = ref([
-//   { id: 1, title: "Tree whatever participant need bed.", profile_image: "https://via.placeholder.com/50", author: "Linda Fields", created_at: "2024-03-15 08:54", likes: 17, comments: 17, board_name: "금융 꿀팁" },
-//   { id: 2, title: "Teach energy store.", profile_image: "https://via.placeholder.com/50", author: "Scott Roberts", created_at: "2024-03-28 04:22", likes: 30, comments: 5, board_name: "금융 꿀팁" },
-//   { id: 3, title: "Woman everything some several heart bag.", profile_image: "https://via.placeholder.com/50", author: "Mark Humphrey", created_at: "2024-02-19 15:45", likes: 33, comments: 9, board_name: "금융 꿀팁" },
-//   { id: 4, title: "Then big task rest while.", profile_image: "https://via.placeholder.com/50", author: "Crystal Weber", created_at: "2024-03-10 21:30", likes: 22, comments: 7, board_name: "전체게시판" },
-//   { id: 5, title: "Answer analysis then performance bit everybody.", profile_image: "https://via.placeholder.com/50", author: "Barry Bush", created_at: "2024-02-13 10:21", likes: 23, comments: 20, board_name: "전체게시판" },
-//   { id: 6, title: "Out choose help chair tough money.", profile_image: "https://via.placeholder.com/50", author: "Mr. Steven Mendez", created_at: "2024-02-17 13:28", likes: 1, comments: 16, board_name: "금융 꿀팁" },
-//   { id: 7, title: "Certain investment level traditional.", profile_image: "https://via.placeholder.com/50", author: "Taylor Moore", created_at: "2024-04-16 23:01", likes: 48, comments: 20, board_name: "전체게시판" },
-//   { id: 8, title: "Song against here.", profile_image: "https://via.placeholder.com/50", author: "Alan Li", created_at: "2024-04-21 20:19", likes: 42, comments: 2, board_name: "자유게시판" },
-//   { id: 9, title: "Somebody no unit.", profile_image: "https://via.placeholder.com/50", author: "Shane Rodriguez", created_at: "2024-10-07 15:33", likes: 19, comments: 19, board_name: "전체게시판" },
-//   { id: 10, title: "Final trouble paper forget stage table.", profile_image: "https://via.placeholder.com/50", author: "Brian Davis", created_at: "2024-06-10 00:58", likes: 42, comments: 15, board_name: "전체게시판" },
-//   { id: 11, title: "Ability direction approach receive president condition.", profile_image: "https://via.placeholder.com/50", author: "Kathryn Long", created_at: "2024-02-17 04:08", likes: 20, comments: 14, board_name: "자유게시판" },
-//   { id: 12, title: "Wait turn hotel mean fact.", profile_image: "https://via.placeholder.com/50", author: "William Cruz", created_at: "2024-02-03 04:52", likes: 40, comments: 5, board_name: "금융 꿀팁" },
-//   { id: 13, title: "Attorney dark television nor carry find.", profile_image: "https://via.placeholder.com/50", author: "Elizabeth Kaiser", created_at: "2024-11-03 11:34", likes: 25, comments: 16, board_name: "자유게시판" },
-//   { id: 14, title: "Physical car drug color trip.", profile_image: "https://via.placeholder.com/50", author: "Charles Ellison", created_at: "2024-08-04 12:59", likes: 26, comments: 17, board_name: "전체게시판" },
-//   { id: 15, title: "Up lot may.", profile_image: "https://via.placeholder.com/50", author: "Brandon Rosales", created_at: "2024-10-15 13:59", likes: 20, comments: 6, board_name: "전체게시판" },
-//   { id: 16, title: "Eye American bit general maybe mouth.", profile_image: "https://via.placeholder.com/50", author: "Timothy Myers", created_at: "2024-01-31 14:28", likes: 15, comments: 11, board_name: "전체게시판" },
-//   { id: 17, title: "Budget next offer positive law note.", profile_image: "https://via.placeholder.com/50", author: "Lisa Gallagher", created_at: "2024-08-19 09:44", likes: 30, comments: 7, board_name: "전체게시판" },
-//   { id: 18, title: "On wide war agency apply.", profile_image: "https://via.placeholder.com/50", author: "James Griffin", created_at: "2024-10-09 06:19", likes: 44, comments: 16, board_name: "금융 꿀팁" },
-//   { id: 19, title: "Arrive ability sort.", profile_image: "https://via.placeholder.com/50", author: "Kimberly Mckay", created_at: "2024-11-04 14:57", likes: 46, comments: 14, board_name: "전체게시판" },
-//   { id: 20, title: "Apply system expect cup natural.", profile_image: "https://via.placeholder.com/50", author: "Heather Hernandez", created_at: "2024-07-03 01:39", likes: 41, comments: 8, board_name: "전체게시판" },
-//   { id: 21, title: "Ask have young.", profile_image: "https://via.placeholder.com/50", author: "Michael Kelly", created_at: "2024-03-22 23:24", likes: 5, comments: 15, board_name: "금융 꿀팁" },
-//   { id: 22, title: "Feeling note student meeting ten.", profile_image: "https://via.placeholder.com/50", author: "Evan Smith", created_at: "2024-08-29 07:30", likes: 26, comments: 16, board_name: "자유게시판" },
-//   { id: 23, title: "One sell against.", profile_image: "https://via.placeholder.com/50", author: "Aaron Jackson", created_at: "2024-07-07 19:11", likes: 45, comments: 20, board_name: "전체게시판" },
-//   { id: 24, title: "Economy west less note serious.", profile_image: "https://via.placeholder.com/50", author: "Frederick Miller", created_at: "2024-04-28 04:33", likes: 47, comments: 17, board_name: "전체게시판" },
-//   { id: 25, title: "Star Democrat nice way budget.", profile_image: "https://via.placeholder.com/50", author: "Paige Chan", created_at: "2024-10-31 15:14", likes: 18, comments: 16, board_name: "자유게시판" },
-//   { id: 26, title: "Good eight campaign one.", profile_image: "https://via.placeholder.com/50", author: "Robert Ferguson", created_at: "2024-08-05 11:42", likes: 40, comments: 14, board_name: "전체게시판" },
-//   { id: 27, title: "Dark house answer national film four.", profile_image: "https://via.placeholder.com/50", author: "Richard Smith", created_at: "2024-05-21 04:59", likes: 24, comments: 6, board_name: "금융 꿀팁" },
-//   { id: 28, title: "Where really responsibility.", profile_image: "https://via.placeholder.com/50", author: "Christina Garcia", created_at: "2024-04-28 12:46", likes: 47, comments: 19, board_name: "전체게시판" },
-//   { id: 29, title: "Involve support near activity reason together.", profile_image: "https://via.placeholder.com/50", author: "Sarah Taylor", created_at: "2024-01-19 16:15", likes: 22, comments: 6, board_name: "전체게시판" }
-// ])
 const selectedTab = ref("전체게시판");
 const currentPage = ref(1); // 현재 페이지
 const articlesPerPage = 10; // 페이지당 표시할 게시글 수
