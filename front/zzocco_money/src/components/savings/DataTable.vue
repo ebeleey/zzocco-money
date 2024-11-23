@@ -211,28 +211,20 @@ const joinDenyMapping = {
   3: "일부제한",
 };
 
-// 검색어 관련 변수 분리
-const searchInput = ref(''); // 입력 중인 검색어
-const searchQuery = ref(''); // 실제 검색에 사용될 검색어
-
-// 검색 처리 함수 수정
-const handleSearch = () => {
-  searchQuery.value = searchInput.value; // 검색 버튼 클릭 시 searchQuery 업데이트
-  currentPage.value = 1; // 페이지 초기화
-};
-
 const filteredProducts = computed(() => {
+  currentPage.value = 1
   return props.products.filter((product) => {
+    console.log(props.filters.searchQuery)
     // 검색어 필터링
     const matchesSearch =
-      searchQuery.value.trim() === '' || // 검색어가 없으면 무조건 포함
+      props.filters.searchQuery.trim() === '' || // 검색어가 없으면 무조건 포함
       (props.activeTab === 'deposit'
         ? product.deposit_id__fin_prdt_nm
             .toLowerCase()
-            .includes(searchQuery.value.toLowerCase()) // 예금 상품명 검색
+            .includes(props.filters.searchQuery.toLowerCase()) // 예금 상품명 검색
         : product.saving_id__fin_prdt_nm
             .toLowerCase()
-            .includes(searchQuery.value.toLowerCase())); // 적금 상품명 검색
+            .includes(props.filters.searchQuery.toLowerCase())); // 적금 상품명 검색
 
     // 기타 필터링 조건
     const matchesBank = 
