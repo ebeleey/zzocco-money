@@ -81,9 +81,9 @@
       </button>
     </div>
     <!-- 검색 바 -->
-    <form class="search-bar" @submit="handleSearch" role="search">
+    <form class="search-bar" @submit.prevent="handleSearch" role="search">
       <input 
-        v-model="searchQuery" 
+        v-model="searchInput" 
         class="form-control me-2" 
         type="search" 
         placeholder="검색어를 입력하세요" 
@@ -94,48 +94,83 @@
   </div>
 </template>
 
-
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { useCommunityStore } from '@/stores/community'
+import { ref, computed, onMounted, watch } from 'vue';
+import { useCommunityStore } from '@/stores/community';
+import { storeToRefs } from 'pinia';
 
-// const searchQuery = ref("")
-const communityStore = useCommunityStore()
-const isLoading = ref(true)
-// const article = ref(null)
-const articles = computed(() => communityStore.articles)
-
-onMounted(() => {
-  if (articles.value) {
-    isLoading.value = false
-  }
-})
-
+const communityStore = useCommunityStore();
+const { articles } = storeToRefs(communityStore);
+const isLoading = ref(true);
 const selectedTab = ref("전체게시판");
-const currentPage = ref(1); // 현재 페이지
-const articlesPerPage = 10; // 페이지당 표시할 게시글 수
+const currentPage = ref(1);
+const articlesPerPage = 10;
 
-// 탭 선택 함수
-const selectTab = (tab) => {
-  selectedTab.value = tab;
-  currentPage.value = 1; // 탭 변경 시 첫 페이지로 이동
+// 검색어 관련 변수 분리
+const searchInput = ref(''); // 입력 중인 검색어
+const searchQuery = ref(''); // 실제 검색에 사용될 검색어
+
+// 검색 처리 함수 수정
+const handleSearch = () => {
+  searchQuery.value = searchInput.value; // 검색 버튼 클릭 시 searchQuery 업데이트
+  currentPage.value = 1; // 페이지 초기화
 };
 
-// 필터링된 게시글
+// 필터링된 게시글 computed 속성
 const filteredArticles = computed(() => {
-  if (!articles.value) return []
-  if (selectedTab.value === "전체게시판") {
-    return articles.value;
+  if (!articles.value) return [];
+  let filtered = articles.value;
+  
+  // 탭 필터링
+  if (selectedTab.value !== "전체게시판") {
+    filtered = filtered.filter(article => article.board_name === selectedTab.value);
   }
-  return articles.value.filter((article) => article.board_name === selectedTab.value);
+  
+  // 검색어 필터링 (searchQuery 사용)
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase();
+    filtered = filtered.filter(article => 
+      article.title.toLowerCase().includes(query) ||
+      article.user.username.toLowerCase().includes(query)
+    );
+  }
+  
+  return filtered;
 });
 
-// 전체 페이지 수 계산
+// 컴포넌트 마운트 시 데이터 로드
+onMounted(async () => {
+  try {
+    await loadArticles();
+  } catch (error) {
+    console.error('Failed to load articles:', error);
+  }
+});
+
+// 데이터 로드 함수
+const loadArticles = async () => {
+  isLoading.value = true;
+  try {
+    await communityStore.getArticles();
+  } catch (error) {
+    console.error('Error loading articles:', error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// 탭 변경 시 데이터 다시 로드
+const selectTab = async (tab) => {
+  selectedTab.value = tab;
+  currentPage.value = 1;
+  await loadArticles();
+};
+
+// 페이지네이션 관련 computed 속성
 const totalPages = computed(() => {
   return Math.ceil(filteredArticles.value.length / articlesPerPage);
 });
 
-// 현재 페이지에 표시할 게시글
 const paginatedArticles = computed(() => {
   const start = (currentPage.value - 1) * articlesPerPage;
   const end = start + articlesPerPage;
@@ -146,8 +181,17 @@ const paginatedArticles = computed(() => {
 const changePage = (page) => {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page;
+    window.scrollTo(0, 0);
   }
 };
+
+// 날짜 포맷 함수
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const formattedDate = date.toLocaleDateString();
+  const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  return `${formattedDate} ${formattedTime}`;
+}
 </script>
   
 <style lang="scss" scoped>
