@@ -7,18 +7,17 @@
     <div v-else>
       <!-- 정렬 버튼 -->
       <div class="sort-buttons">
-        <button
-          :class="{ active: sortKey === 'intr_rate2' }"
-          @click="sortKey = 'intr_rate2'"
-        >
-          최고 우대금리로 정렬
-        </button>
-        <button
-          :class="{ active: sortKey === 'intr_rate' }"
-          @click="sortKey = 'intr_rate'"
-        >
-          기본금리로 정렬
-        </button>
+        <form class="search-bar" @submit.prevent="handleSearch" role="search">
+          <input 
+            v-model="searchInput" 
+            class="form-control me-2" 
+            type="search" 
+            placeholder="검색어를 입력하세요" 
+            aria-label="Search"
+          />
+          <button class="btn btn-outline-success" type="submit">검색</button>
+        </form>
+        
       </div>
 
       <!-- 데이터 테이블 -->
@@ -28,8 +27,26 @@
             <th class="col-rank">순위</th>
             <th class="col-company">금융회사</th>
             <th class="col-product">상품명</th>
-            <th class="col-rate">기본금리</th>
-            <th class="col-rate2">최고 우대금리</th>
+            <th 
+              class="col-rate"
+              :class="{ active: sortKey === 'intr_rate' }"
+              @click="toggleSort('intr_rate')"
+            >
+              기본금리
+              <span v-if="sortKey === 'intr_rate'">
+                {{ sortOrder === 'desc' ? '▼' : '▲' }}
+              </span>
+            </th>
+            <th 
+              class="col-rate2" 
+              :class="{ active: sortKey === 'intr_rate2' }"
+              @click="toggleSort('intr_rate2')"
+            >
+              최고 우대금리
+              <span v-if="sortKey === 'intr_rate2'">
+                {{ sortOrder === 'desc' ? '▼' : '▲' }}
+              </span>
+            </th>
             <th class="col-eligibility">가입 대상</th>
           </tr>
         </thead>
@@ -200,7 +217,7 @@ const itemsPerPage = 20; // 한 페이지당 항목 수
 const currentPage = ref(1); // 현재 페이지
 
 // 정렬 기준 (초기값: 최고 우대금리)
-const sortKey = ref("intr_rate2");
+// const sortKey = ref("intr_rate2");
 
 const joinDenyMapping = {
   1: "제한없음",
@@ -208,50 +225,58 @@ const joinDenyMapping = {
   3: "일부제한",
 };
 
+// 검색어 관련 변수 분리
+const searchInput = ref(''); // 입력 중인 검색어
+const searchQuery = ref(''); // 실제 검색에 사용될 검색어
+
+// 검색 처리 함수 수정
+const handleSearch = () => {
+  searchQuery.value = searchInput.value; // 검색 버튼 클릭 시 searchQuery 업데이트
+  currentPage.value = 1; // 페이지 초기화
+};
+
 const filteredProducts = computed(() => {
   return props.products.filter((product) => {
+    // 검색어 필터링
+    const matchesSearch =
+      searchQuery.value.trim() === '' || // 검색어가 없으면 무조건 포함
+      (props.activeTab === 'deposit'
+        ? product.deposit_id__fin_prdt_nm
+            .toLowerCase()
+            .includes(searchQuery.value.toLowerCase()) // 예금 상품명 검색
+        : product.saving_id__fin_prdt_nm
+            .toLowerCase()
+            .includes(searchQuery.value.toLowerCase())); // 적금 상품명 검색
+
+    // 기타 필터링 조건
     const matchesPeriod =
       props.filters.savingsPeriod.length === 0 ||
       props.filters.savingsPeriod.includes(product.save_trm);
     const matchesCalculation =
       product.intr_rate_type_nm === props.filters.interestCalculation ||
-      props.filters.interestCalculation === "전체";
+      props.filters.interestCalculation === '전체';
     const matchesEligibility =
       props.filters.eligibility.length === 0 ||
       props.filters.eligibility.includes(
-        props.activeTab === "deposit"
+        props.activeTab === 'deposit'
           ? product.deposit_id__join_deny
           : product.saving_id__join_deny
       );
-    // const matchesMethod =
-    //   props.filters.applicationMethods.length === 0 ||
-    //   props.filters.applicationMethods.includes(
-    //     props.activeTab === "deposit"
-    //       ? product.deposit_id__join_way
-    //       : product.saving_id__join_way
-    //   );
     const matchesMethod =
       props.filters.applicationMethods.length === 0 ||
       props.filters.applicationMethods.some((method) => {
-        const productMethods = (props.activeTab === "deposit"
+        const productMethods = (props.activeTab === 'deposit'
           ? product.deposit_id__join_way
           : product.saving_id__join_way
         )
-          .split(",") // 쉼표로 구분된 문자열을 배열로 변환
+          .split(',') // 쉼표로 구분된 문자열을 배열로 변환
           .map((m) => m.trim()); // 공백 제거
 
         return productMethods.includes(method);
       });
 
-    // const matchesCondition =
-    //   props.filters.benefitConditions.length === 0 ||
-    //   props.filters.benefitConditions.includes(
-    //     activeTab.value === "deposit"
-    //       ? product.deposit_id__spcl_cnd
-    //       : product.saving_id__spcl_cnd
-    //   );
-    
     return (
+      matchesSearch && // 검색 조건 추가
       matchesPeriod &&
       matchesCalculation &&
       matchesEligibility &&
@@ -260,11 +285,33 @@ const filteredProducts = computed(() => {
   });
 });
 
+// 정렬 토글 함수
+const sortKey = ref("intr_rate2"); // 초기 정렬 기준: 최고 우대금리
+const sortOrder = ref("desc"); // 초기 정렬 방향: 내림차순
+
+const toggleSort = (key) => {
+  if (sortKey.value === key) {
+    // 현재 정렬 기준이 동일하면 방향 전환
+    sortOrder.value = sortOrder.value === "desc" ? "asc" : "desc";
+  } else {
+    // 새로운 기준으로 변경
+    sortKey.value = key;
+    sortOrder.value = "desc"; // 새로운 정렬 기준은 기본적으로 내림차순
+  }
+};
 
 
+// 정렬된 상품 계산
 const sortedProducts = computed(() => {
-  return [...filteredProducts.value].sort((a, b) => b[sortKey.value] - a[sortKey.value]);
+  return [...filteredProducts.value].sort((a, b) => {
+    const multiplier = sortOrder.value === "asc" ? 1 : -1;
+    return (a[sortKey.value] - b[sortKey.value]) * multiplier;
+  });
 });
+
+// const sortedProducts = computed(() => {
+//   return [...filteredProducts.value].sort((a, b) => b[sortKey.value] - a[sortKey.value]);
+// });
 
 const totalPages = computed(() => {
   return Math.ceil(sortedProducts.value.length / itemsPerPage);
@@ -286,6 +333,44 @@ defineExpose({
 </script>
 
 <style scoped>
+/* 검색창 및 버튼 스타일 */
+.search-bar {
+  display: flex; /* 내부 요소 가로 정렬 */
+  justify-content: center; /* 가운데 정렬 */
+  align-items: center; /* 세로 가운데 정렬 */
+  gap: 10px; /* 검색창과 버튼 사이 간격 */
+  margin-bottom: 20px; /* 아래 간격 */
+}
+
+.search-bar input {
+  width: 300px; /* 검색창 너비 */
+  padding: 10px; /* 안쪽 여백 */
+  border: 1px solid #ccc; /* 테두리 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  font-size: 16px; /* 글자 크기 */
+  outline: none; /* 선택 시 외곽선 제거 */
+  transition: all 0.3s ease; /* 애니메이션 효과 */
+}
+
+.search-bar input:focus {
+  border-color: #3f2411; /* 포커스 시 테두리 색 변경 */
+  box-shadow: 0 0 5px rgba(63, 36, 17, 0.5); /* 그림자 추가 */
+}
+
+.search-bar button {
+  background-color: #3f2411; /* 버튼 배경색 */
+  color: white; /* 버튼 텍스트 색상 */
+  border: none; /* 테두리 제거 */
+  padding: 10px 20px; /* 안쪽 여백 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  font-size: 16px; /* 글자 크기 */
+  cursor: pointer; /* 포인터로 변경 */
+  transition: all 0.3s ease; /* 애니메이션 효과 */
+}
+
+.search-bar button:hover {
+  background-color: #6d4c41; /* 마우스 올릴 때 배경색 변경 */
+}
 
 .loading {
   text-align: center;
@@ -330,6 +415,30 @@ defineExpose({
   border: none;
   cursor: pointer;
 }
+
+th.active {
+  background-color: #6d4c41; /* 활성화된 열 배경색 */
+  color: white;
+}
+th span {
+  margin-left: 5px;
+  font-size: 12px;
+}
+
+th.ascending::after {
+  content: "▲"; /* 오름차순 화살표 */
+  margin-left: 5px;
+  font-size: 12px;
+  color: #fff;
+}
+
+th.descending::after {
+  content: "▼"; /* 내림차순 화살표 */
+  margin-left: 5px;
+  font-size: 12px;
+  color: #fff;
+}
+
 
 .modal-details {
   margin-top: 20px;
