@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 
 from django.shortcuts import get_object_or_404, get_list_or_404
 
-from .serializers import ArticleListSerializer, ArticleSerializer
+from .serializers import ArticleListSerializer, ArticleSerializer, CommentSerializer
 from .models import Article, Comment
 
 
@@ -45,11 +45,10 @@ def article_detail(request, article_pk):
     elif request.method == 'PUT':
         if request.user == article.user:
             serializer = ArticleSerializer(article, data=request.data, partial=True)
-            if serializer.is_valid():
+            if serializer.is_valid(raise_exception=True):
                 serializer.save()
-                return Response(serialzer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+                return Response(serializer.data)
+
     elif request.method == 'DELETE':
         if request.user == article.user:
             article.delete()
@@ -69,9 +68,9 @@ def comment_list(request, article_pk):
 @permission_classes([IsAuthenticated])
 def comment_create(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
-    serialzer = CommentSerializer(data=request.data)
+    serializer = CommentSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
-        serializer.save(article=article)
+        serializer.save(article=article, user=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     
