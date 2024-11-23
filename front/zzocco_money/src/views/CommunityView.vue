@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="article-page">
     <h1 class="page-title">게시판</h1>
     <!-- 탭 버튼 -->
     <ul class="nav justify-content-center">
@@ -53,7 +53,7 @@
           <p class="article-meta">
             <!-- <img :src="article.profile_image" alt="프로필 이미지" class="profile-img" /> -->
             작성자: {{ article.user.username }} &nbsp |  &nbsp
-            작성시간: {{ article.created_at.slice(0, 10) }}  {{ article.created_at.slice(11, 16) }}
+            작성일: {{ article.created_at.slice(0, 10) }}
           </p>
         </div>
         <!-- <div class="article-stats">
@@ -135,6 +135,9 @@ const filteredArticles = computed(() => {
     );
   }
   
+  // 최신순 정렬 (created_at 기준 내림차순)
+  filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  
   return filtered;
 });
 
@@ -195,6 +198,9 @@ const formatDate = (dateString) => {
 </script>
   
 <style lang="scss" scoped>
+.article-page {
+  width: 60%;
+}
 
 .search-bar {
   display: flex;
@@ -258,9 +264,10 @@ const formatDate = (dateString) => {
 /* 카테고리 영역 */
 .article-category {
   flex-shrink: 0;
+  text-align: center;
   width: 120px;
   margin: auto;
-  padding: 6px 12px;
+  padding: 6px;
   border-radius: 4px;
   font-size: 16px;
   color: #3f2411;

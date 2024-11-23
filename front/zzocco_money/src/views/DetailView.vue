@@ -1,36 +1,38 @@
 <template>
-	<h1 class="page-title">게시판</h1>
+  <div>
+    <h1 class="page-title">게시판</h1>
+
     <div class="detail-page">
       <div v-if="isLoading" class="loading">Loading...</div>
       <div v-else-if="!currentArticle" class="error-message">게시글을 찾을 수 없습니다.</div>
       <div v-else>
-        <!-- 게시글 상세 정보 -->
+
         <div class="article-details">
-          <h2 class="article-title">{{ currentArticle.title }}</h2>
-		  <br>
+          <h2 class="article-title">
+            <span>[{{currentArticle.board_name}}]</span> {{ currentArticle.title }}
+          </h2>
+          <br>
           <p class="article-meta">
             작성자: {{ currentArticle.user.username }} &nbsp|&nbsp 
             작성일: {{ formatDate(currentArticle.created_at) }}
           </p>
-          <p class="article-content">{{ currentArticle.content }}</p>
         </div>
-  
-        <hr />
-  
-        <!-- 댓글 섹션 -->
-        <div class="comments-section">
-          <h6>댓글 ({{ comments.length }})</h6>
-			<br>
-          
-		  <ul class="comments-list">
-			<li v-for="(comment, index) in [...comments].reverse()" :key="index" class="comment-item">
-				<p class="comment-author">{{ comment.user.username }}</p>
-				<p class="comment-content">{{ comment.content }}</p>
-				<p class="comment-meta"></p>
-                작성일: {{ formatDate(comment.created_at) }}
-			</li>
-		</ul>
 
+        <hr>
+        <br>
+        <p class="article-content">{{ currentArticle.content }}</p>  
+        <br>
+        <!-- <hr> -->
+
+        <div class="comments-section">
+          <p class="comments-count">🗨️ 댓글 {{ comments.length }}</p>
+          <ul class="comments-list">
+            <li v-for="(comment, index) in comments" :key="index" class="comment-item">
+              <p class="comment-author">{{ comment.user.username }}</p>
+              <p class="comment-content">{{ comment.content }}</p>
+              <p class="comment-meta">{{ formatDate(comment.created_at) }}</p>
+            </li>
+          </ul>
           <!-- 댓글 작성 -->
           <form @submit.prevent="submitComment" class="comment-form">
             <textarea
@@ -41,9 +43,11 @@
             ></textarea>
             <button class="btn btn-primary" :disabled="!newComment">댓글 작성</button>
           </form>
+          </div>
         </div>
       </div>
     </div>
+	
   </template>
   
   <script setup>
@@ -97,93 +101,118 @@ const submitComment = async () => {
   }
 };
   
-  
-  // 날짜 포맷 함수
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString();
-  };
-  </script>
-  
-  <style scoped>
-h2 {
-	text-align: left;
-  font-family: Pretendard-Regular;
+
+// 날짜 포맷 함수
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleString();
+};
+</script>
+
+<style scoped>
+hr {
+  margin: 0 auto;
+  height: 3px;
+  background-color: #3f2411;
+  margin-bottom: 30px;
 }
-  .detail-page {
-    margin: 20px auto;
-    max-width: 800px;
-  }
-  
-  .article-details {
-    margin-bottom: 30px;
-  }
-  
-  .article-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .article-meta {
-    color: #666;
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-  
-  .article-content {
-    font-size: 16px;
-    line-height: 1.6;
-  }
-  
-  .comments-section {
-    margin-top: 30px;
-  }
-  
-  .comments-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .comment-item {
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-  }
-  
-  .comment-author {
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  .comment-content {
-    margin-bottom: 5px;
-  }
-  
-  .comment-meta {
-    color: #666;
-    font-size: 12px;
-  }
-  
-  .comment-form {
-    margin-top: 20px;
-  }
-  
-  .comment-form textarea {
-    margin-bottom: 10px;
-  }
-  
-  .comment-form button {
-    background-color: #3f2411;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-  }
-  
-  .comment-form button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  </style>
-  
+
+h2 {
+text-align: left;
+font-family: 'Pretendard-Regular';
+}
+
+.detail-page {
+  margin: 20px auto;
+  max-width: 60%;
+}
+
+.article-details {
+  padding: 0 10px;
+}
+
+
+.article-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+
+}
+
+.article-title span {
+  color: #3f2411;
+}
+
+.article-meta {
+  color: #666;
+  font-size: 14px;
+  text-align: right;
+  margin-bottom: 5px;
+}
+
+.article-content {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.comments-section {
+  margin-top: 30px;
+  background-color: #cabcb38a;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.comments-count {
+  font-size: 14px;
+}
+
+.comments-list {
+  list-style: none;
+  padding: 10px;
+}
+
+.comment-item {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #3f241144;
+  padding-bottom: 0px;
+}
+
+.comment-author {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.comment-content {
+  margin-bottom: 5px;
+}
+
+.comment-meta {
+  color: #3f241191;
+  font-size: 12px;
+}
+
+.comment-form {
+  margin: 5px;
+  display: flex;
+  height: 60px;
+}
+
+.comment-form textarea {
+
+}
+
+.comment-form button {
+  background-color: #3f2411;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  width: 120px;
+  margin: 0 10px;
+}
+
+.comment-form button:disabled {
+  background-color: #968d84;
+  cursor: not-allowed;
+}
+</style>
