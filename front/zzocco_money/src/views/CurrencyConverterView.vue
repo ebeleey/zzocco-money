@@ -3,20 +3,22 @@
     <h1 class="page-title">환율 계산기</h1>
 
     <div class="currency-converter">
-
       <div class="input-container">
         <div class="currency-input">
           <select v-model="fromCurrency">
-            <option v-for="currency in currencies" :key="currency" :value="currency">
-              {{ currency }}
+            <option v-for="currency in currencies" :key="currency.cur_unit" :value="currency.cur_unit">
+              {{ currency.cur_unit }}
             </option>
           </select>
-          <input class="amount" v-model.number="amount" type="number" />
+          <div class="amount-box">
+            <input v-model.number="amount" type="number" class="amount-input" />
+            <span class="currency-name">{{ getCurrencyName(fromCurrency) }}</span>
+          </div>
         </div>
       </div>
 
       <div class="convert-icon">
-        <button @click="swapCurrencies">
+        <button @click="convert">
           <img src="../assets/transfer.png" alt="Swap Currencies" />
         </button>
       </div>
@@ -24,11 +26,14 @@
       <div class="input-container">
         <div class="currency-input">
           <select v-model="toCurrency">
-            <option v-for="currency in currencies" :key="currency" :value="currency">
-              {{ currency }}
+            <option v-for="currency in currencies" :key="currency.cur_unit" :value="currency.cur_unit">
+              {{ currency.cur_unit }}
             </option>
           </select>
-          <input class="amount" type="text" :value="convertedAmount" readonly />
+          <div class="amount-box" style="background-color: #f5f5f5;">
+            <input :value="convertedAmount" type="text" class="amount-output" readonly />
+            <span class="currency-name">{{ getCurrencyName(toCurrency) }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -44,8 +49,15 @@ export default {
     const fromCurrency = ref("KRW");
     const toCurrency = ref("USD");
     const amount = ref(1);
-    const convertedAmount = ref();
+    const convertedAmount = ref(0);
+    const exchangeRates = ref([]);
     const currencies = ref([]);
+
+    // 통화명 가져오기 함수
+    const getCurrencyName = (currencyCode) => {
+      const currency = exchangeRates.value.find(rate => rate.cur_unit === currencyCode);
+      return currency ? currency.cur_nm : currencyCode;
+    };
 
     // 환율 데이터 가져오기
     const fetchData = async () => {
@@ -53,37 +65,44 @@ export default {
         const response = await axios.get(
           "http://127.0.0.1:8000/currency/get_exchange_rates/"
         );
-        currencies.value = Object.keys(response.data); // 통화 목록
+        exchangeRates.value = response.data;
+        
+        // KRW 추가 (API에서 제공하지 않음)
+        exchangeRates.value.push({
+          cur_unit: "KRW",
+          cur_nm: "한국 원",
+          deal_bas_r: 1
+        });
+        
+        currencies.value = exchangeRates.value;
       } catch (error) {
         console.error("Error fetching exchange rates:", error);
       }
     };
 
-    // 통화 변환 요청
-    const convert = async () => {
-      if (!fromCurrency.value || !toCurrency.value || !amount.value) {
-        convertedAmount.value = null;
-        return;
-      }
-      try {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/currency/convert/",
-          {
-            amount: amount.value,
-            from_currency: fromCurrency.value,
-            to_currency: toCurrency.value,
-          }
-        );
-        convertedAmount.value = response.data.result;
-      } catch (error) {
-        console.error("Error in currency converter:", error);
-      }
+    // 환율 가져오기 함수
+    const getExchangeRate = (currencyCode) => {
+      const currency = exchangeRates.value.find(rate => rate.cur_unit === currencyCode);
+      return currency ? currency.deal_bas_r : 1;
     };
 
-    // 컴포넌트가 마운트될 때 환율 데이터 가져오기
-    onMounted(() => {
-      fetchData();
-    });
+    // 통화 변환 로직
+    const convert = () => {
+      if (toCurrency.value === "KRW") {
+        convertedAmount.value = amount.value * getExchangeRate(fromCurrency.value);
+      } else if (fromCurrency.value === "KRW") {
+        convertedAmount.value = amount.value / getExchangeRate(toCurrency.value);
+      } else {
+        const fromRate = getExchangeRate(fromCurrency.value);
+        const toRate = getExchangeRate(toCurrency.value);
+        convertedAmount.value = (amount.value * fromRate) / toRate;
+      }
+      // 소수점 둘째자리까지 반올림
+      convertedAmount.value = Math.round(convertedAmount.value * 100) / 100;
+    };
+
+    // 컴포넌트가 마운트될 때 데이터 로드
+    onMounted(fetchData);
 
     // 값 변경 시 변환 수행
     watch([fromCurrency, toCurrency, amount], convert);
@@ -94,13 +113,42 @@ export default {
       amount,
       convertedAmount,
       currencies,
-      convert
+      convert,
+      getCurrencyName,
     };
-  }
+  },
 };
 </script>
 
 <style scoped>
+.amount-box {
+  flex: 1;
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.currency-name {
+  text-align: right;
+}
+
+.amount-input, 
+.amount-output {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  width: 60%;
+  outline: none;
+  text-align: right;
+}
+
+.amount-output {
+  margin-right: 10px;
+}
 
 .currency-converter {
   max-width: 600px;
@@ -113,31 +161,19 @@ export default {
   border: 1px solid #ddd;
 }
 
-.amount {
-  text-align: right;
-}
-
-.input-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 .currency-input {
   display: flex;
   gap: 20px;
 }
 
-.currency-input select,
-.currency-input input {
-  padding: 0.75rem;
+.currency-input select {
+  padding: 20px 15px;
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
-}
-
-.currency-input select {
-  width: 100px;
+  position: relative;
+  display: inline-block;
+  width: 120px;
 }
 
 .currency-input input {
@@ -166,8 +202,6 @@ export default {
   height: 50px;
 }
 
-input[readonly] {
-  background-color: #f5f5f5;
-}
+
 
 </style>
