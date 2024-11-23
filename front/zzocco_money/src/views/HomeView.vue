@@ -30,7 +30,7 @@ const handleClick = () => {
       router.push('login/')
     }
   } else {
-    router.push('/recommend') // 로그인 상태라면 recommend 페이지로 이동
+    router.push('/fbti') // 로그인 상태라면 recommend 페이지로 이동
   }
 }
 </script>

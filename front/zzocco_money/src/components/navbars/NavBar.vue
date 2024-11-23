@@ -18,7 +18,7 @@
         <!-- 로고와 네비게이션 메뉴 -->
         <div class="collapse navbar-collapse" id="navbarToggler">
           <RouterLink :to="{ name: 'home' }">
-            <img src="../../assets/logo_wave.png" alt="logo" />
+            <img src="../../assets/logo_sprinkle.png" alt="logo" />
           </RouterLink>
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item">
