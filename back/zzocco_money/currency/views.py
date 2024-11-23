@@ -17,31 +17,13 @@ def get_exchange_rates(request):
     response = requests.get(url, params=params)
     exchange_rates = response.json()
 
-    data = {}
+    data = []
     for rate in exchange_rates:
-        cur_unit = rate['cur_unit']
-        deal_bas_r = float(rate['deal_bas_r'].replace(',', '')) #숫자로 저장하기
-        data[cur_unit] = deal_bas_r
+        currency_info = {
+            'cur_unit': rate['cur_unit'],
+            'cur_nm': rate['cur_nm'],
+            'deal_bas_r': float(rate['deal_bas_r'].replace(',', ''))
+        }
+        data.append(currency_info)
 
     return Response(data)
-
-@api_view(['POST'])
-def currency_converter(request):
-
-    amount = float(request.data.get("amount")) # 입력값
-    from_currency = request.data.get("from_currency") 
-    to_currency = request.data.get("to_currency")
-    
-    exchange_rates = get_exchange_rates(request).data
-
-    if from_currency == 'KRW':
-        result = amount / exchange_rates[to_currency]
-    elif to_currency == 'KRW':
-        result = amount * exchange_rates[from_currency]
-    else:
-        result = (amount * exchange_rates[from_currency]) / exchange_rates[to_currency]
-
-
-    return Response({'result': round(result, 2)})
-
-    
