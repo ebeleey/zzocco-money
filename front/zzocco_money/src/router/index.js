@@ -9,6 +9,7 @@ import RecommendView from '@/views/RecommendView.vue'
 import BankLocatorView from '@/views/BankLocatorView.vue'
 import SavingsView from '@/views/SavingsView.vue'
 import DetailView from '@/views/DetailView.vue'
+import PostArticleView from '@/views/PostArticleView.vue'
 
 
 const router = createRouter({
@@ -53,6 +54,11 @@ const router = createRouter({
       path: '/articles/:id',
       name: 'DetailView',
       component: DetailView
+    },
+    {
+      path: '/articles/post/',
+      name: 'PostArticleView',
+      component: PostArticleView
     },
     {
       path: '/recommend',
