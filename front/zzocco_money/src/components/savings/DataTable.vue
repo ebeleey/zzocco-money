@@ -5,20 +5,6 @@
     </div>
 
     <div v-else>
-      <!-- 정렬 버튼 -->
-      <div class="sort-buttons">
-        <form class="search-bar" @submit.prevent="handleSearch" role="search">
-          <input 
-            v-model="searchInput" 
-            class="form-control me-2" 
-            type="search" 
-            placeholder="검색어를 입력하세요" 
-            aria-label="Search"
-          />
-          <button class="btn btn-outline-success" type="submit">검색</button>
-        </form>
-        
-      </div>
 
       <!-- 데이터 테이블 -->
       <table>
@@ -249,6 +235,19 @@ const filteredProducts = computed(() => {
             .includes(searchQuery.value.toLowerCase())); // 적금 상품명 검색
 
     // 기타 필터링 조건
+    const matchesBank = 
+      props.filters.banks.length === 0 || 
+      props.filters.banks.some((bank) => {
+        const bankName = (props.activeTab === 'deposit'
+          ? product.deposit_id__kor_co_nm
+          : product.saving_id__kor_co_nm
+        )
+          .split(',') // 쉼표로 구분된 문자열을 배열로 변환
+          .map((m) => m.trim()); // 공백 제거
+        // console.log(bankName)
+        // console.log(bank)
+        return bankName[0].includes(bank);
+      })
     const matchesPeriod =
       props.filters.savingsPeriod.length === 0 ||
       props.filters.savingsPeriod.includes(product.save_trm);
@@ -276,6 +275,7 @@ const filteredProducts = computed(() => {
       });
 
     return (
+      matchesBank &&
       matchesSearch && // 검색 조건 추가
       matchesPeriod &&
       matchesCalculation &&

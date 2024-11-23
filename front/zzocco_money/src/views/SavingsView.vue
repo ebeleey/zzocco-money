@@ -22,7 +22,8 @@
 
 
     <div class="savings-view">
-      <Sidebar @update-filters="applyFilters" />
+      
+      <Sidebar @update-filters="applyFilters" :banks="bankList" />
       <DataTable :filters="filters" :products="currentProducts" :active-tab="activeTab"/>
     </div>
 
@@ -47,8 +48,10 @@ const switchTab = async (tab) => {
 
 const deposits = ref([])
 const savings = ref([])
+const bankList = ref([])
 
 const initialFilters = {
+  banks: [],
   savingsPeriod: [], // 모든 기간 허용
   interestCalculation: '전체',
   eligibility: [],
@@ -63,6 +66,7 @@ const currentProducts = computed(() => {
 })
 
 
+
 // API 데이터 로드
 const fetchData = async () => {
   try {
@@ -74,6 +78,11 @@ const fetchData = async () => {
         deposits.value = response.data
         console.log("정기예금 데이터:", deposits.value);
       }
+
+      bankList.value = [...new Set(deposits.value.map(item => item.deposit_id__kor_co_nm))]
+      bankList.value.sort()
+      // [...new Set(data.map(item => item.saving_id__kor_co_nm))]
+      console.log(bankList.value)
     } else if (activeTab.value === "saving") {
       console.log("적금")
       // 적금 데이터 가져오기
@@ -81,8 +90,10 @@ const fetchData = async () => {
         const response = await axios.get("http://127.0.0.1:8000/savings/get-savings/");
         savings.value = response.data
         console.log("적금 데이터:", savings.value);
-
       }
+      bankList.value = [...new Set(savings.value.map(item => item.saving_id__kor_co_nm))]
+      bankList.value.sort()
+      console.log(bankList.value)
     }
   } catch (error) {
     console.error("API 호출 중 오류 발생:", error);
