@@ -2,10 +2,10 @@
   <div class="sidebar">
       <!-- 정렬 버튼 -->
       <div class="sort-buttons">
-      <form class="search-bar" @submit.prevent="handleSearch" role="search">
+      <form class="search-bar" @submit.prevent="updateFilters" role="search">
         <div class="input-group">
           <input 
-            v-model="searchInput" 
+            v-model="searchQuery" 
             class="form-control me-2" 
             type="search" 
             placeholder="검색어를 입력하세요" 
@@ -147,6 +147,8 @@ import { ref, computed, onMounted } from "vue";
 const props = defineProps({
   banks: Array
 })
+// 검색어 관련 변수 분리
+const searchQuery = ref(''); // 실제 검색에 사용될 검색어
 
 const savingsPeriod = [1, 3, 6, 12, 24, 36]
 // const financialSector = ["전체", "은행", "저축은행", "신협조합"];
@@ -223,6 +225,7 @@ const updateSelectedMethods = () => {
 // 부모 컴포넌트로 필터 업데이트 전달
 const updateFilters = () => {
   const filters = {
+    searchQuery: searchQuery.value,
     banks: selectedBanks.value,
     savingsPeriod: selectedSavingsPeriod.value, 
     // financialSector: selectedFinancialSector.value,

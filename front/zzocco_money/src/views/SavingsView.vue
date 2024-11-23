@@ -51,6 +51,7 @@ const savings = ref([])
 const bankList = ref([])
 
 const initialFilters = {
+  searchQuery: "",
   banks: [],
   savingsPeriod: [], // 모든 기간 허용
   interestCalculation: '전체',
