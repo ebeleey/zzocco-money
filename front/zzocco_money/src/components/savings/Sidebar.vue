@@ -1,5 +1,20 @@
 <template>
   <div class="sidebar">
+      <!-- 정렬 버튼 -->
+      <div class="sort-buttons">
+      <form class="search-bar" @submit.prevent="handleSearch" role="search">
+        <div class="input-group">
+          <input 
+            v-model="searchInput" 
+            class="form-control me-2" 
+            type="search" 
+            placeholder="검색어를 입력하세요" 
+            aria-label="Search"
+          />
+          <button class="btn btn-outline-success search-button" type="submit">검색</button>
+        </div>
+      </form>
+    </div>
     <!-- 단일 선택: 저축 예정 기간 -->
     <div class="filter-group">
       <h3>저축 예정 기간</h3>
@@ -25,6 +40,24 @@
       </select>
     </div>
     <hr> -->
+
+    
+    <div class="filter-group">
+      <h3>은행</h3>
+      <div v-for="bank in banks" :key="bank" class="checkbox-item">
+        <label>
+          <input 
+          type="checkbox"
+          :value="bank"
+          v-model="selectedBanks"
+          @change="updateFilters"
+        />
+          {{ bank }}
+        </label>
+      </div>
+    </div>
+    <hr>
+    
 
     <!-- 단일 선택: 이자 계산 방식 -->
     <div class="filter-group">
@@ -108,9 +141,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 
 // 단일 선택 옵션
+const props = defineProps({
+  banks: Array
+})
 
 const savingsPeriod = [1, 3, 6, 12, 24, 36]
 // const financialSector = ["전체", "은행", "저축은행", "신협조합"];
@@ -122,13 +158,13 @@ const applicationMethod = [
 // const benefitConditions = [
 //   "비대면 가입", "재예치", "주거래(급여, 연금 이체 등)", "첫거래", "연령", "타상품가입·실적"
 // ];
-
+const selectedBanks = ref([])
 const selectedSavingsPeriod = ref([]);
 const selectedInterestCalculation = ref(interestCalculation[0]);
 const selectedEligibility = ref([]);
 const selectedApplicationMethods = ref([...applicationMethod]);
 
-// const selectedBenefitConditions = ref([]);
+const banks = computed(() => props.banks)
 
 // 부모 컴포넌트로 이벤트 전달
 const emit = defineEmits(["update-filters"]); // 이벤트 정의
@@ -187,6 +223,7 @@ const updateSelectedMethods = () => {
 // 부모 컴포넌트로 필터 업데이트 전달
 const updateFilters = () => {
   const filters = {
+    banks: selectedBanks.value,
     savingsPeriod: selectedSavingsPeriod.value, 
     // financialSector: selectedFinancialSector.value,
     interestCalculation: selectedInterestCalculation.value,
@@ -197,21 +234,47 @@ const updateFilters = () => {
   // 이벤트로 부모 컴포넌트에 전달
   emit("update-filters", filters);
 };
+
 </script>
 
 <style scoped>
-.button-group {
-  /* display: flex;
+.sort-buttons {
+  display: flex;
   gap: 10px;
-  flex-wrap: wrap; */
-  display: grid; /* Grid 레이아웃 사용 */
-  grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개의 열로 배치 */
+  margin-bottom: 20px;
+  justify-content: flex-end;
+}
+
+.search-bar .input-group {
+  display: flex;
+  width: 100%;
+}
+
+.search-bar .form-control {
+  flex-grow: 1; /* 검색창을 버튼보다 넓게 만들기 */
+}
+
+.search-button {
+  background-color: #3f2411;
+  border: 1px solid white; /* 초록색 테두리에서 흰색으로 변경 */
+  color: white; /* 글씨도 흰색으로 변경 */
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #6d4c41;
+}
+
+.button-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 button {
-  /* padding: 10px 15px; */
   margin: 2px;
-  /* border: 1px solid #ccc; */
   background-color: #3f2411;
   border-radius: 5px;
   cursor: pointer;
@@ -219,7 +282,7 @@ button {
 }
 
 button.active {
-  background-color: #6d4c41;;
+  background-color: #6d4c41;
   color: white;
   font-weight: bold;
 }
@@ -230,23 +293,13 @@ button:hover {
 }
 
 .sidebar {
-  /* width: 240px;
-  padding: 20px;
-  background-color: rgba(228, 217, 211, 0.829);
-  border-radius: 1cap; */
   accent-color: #3f2411;
 }
 
 .filter-group {
-  width: 260px;
   padding: 20px;
   background-color: rgba(228, 217, 211, 0.829);
   border-radius: 1cap;
-}
-
-h2 {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
 }
 
 h3 {
@@ -255,11 +308,6 @@ h3 {
   margin-bottom: 10px;
 }
 
-.checkbox {
-  
-
-
-}
 input[type="checkbox"] {
   margin-right: 5px;
 }
