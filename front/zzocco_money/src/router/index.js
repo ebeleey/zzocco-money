@@ -10,7 +10,8 @@ import BankLocatorView from '@/views/BankLocatorView.vue'
 import SavingsView from '@/views/SavingsView.vue'
 import DetailView from '@/views/DetailView.vue'
 import PostArticleView from '@/views/PostArticleView.vue'
-
+import fbtiResultView from '@/views/fbtiResultView.vue'
+import fbtiTestView from '@/views/fbtiTestView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,6 +65,16 @@ const router = createRouter({
       path: '/recommend',
       name: 'recommend',
       component: RecommendView
+    },
+    {
+      path: '/fbti',
+      name: 'fbti-test',
+      component: fbtiTestView,
+    },
+    {
+      path: '/test_result',
+      name: 'test-result',
+      component: fbtiResultView,
     },
     {
       path: '/bank_locator',
