@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
-      <!-- 정렬 버튼 -->
-      <div class="sort-buttons">
+    <!-- 정렬 버튼 -->
+    <div class="sort-buttons">
       <form class="search-bar" @submit.prevent="updateFilters" role="search">
         <div class="input-group">
           <input 
@@ -41,8 +41,20 @@
     </div>
     <hr> -->
 
-    
     <div class="filter-group">
+      <h3>은행 선택</h3>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle full-width" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          {{ selectedBank || '은행을 선택하세요' }}
+        </button>
+        <ul class="dropdown-menu">
+          <li class="dropdown-item" v-for="bank in banks" :key="bank" @click="selectBank(bank)">
+            {{ bank }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- <div class="filter-group">
       <h3>은행</h3>
       <div v-for="bank in banks" :key="bank" class="checkbox-item">
         <label>
@@ -55,7 +67,7 @@
           {{ bank }}
         </label>
       </div>
-    </div>
+    </div> -->
     <hr>
     
 
@@ -141,7 +153,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, watch } from "vue";
 
 // 단일 선택 옵션
 const props = defineProps({
@@ -160,11 +172,30 @@ const applicationMethod = [
 // const benefitConditions = [
 //   "비대면 가입", "재예치", "주거래(급여, 연금 이체 등)", "첫거래", "연령", "타상품가입·실적"
 // ];
-const selectedBanks = ref([])
+
 const selectedSavingsPeriod = ref([]);
 const selectedInterestCalculation = ref(interestCalculation[0]);
 const selectedEligibility = ref([]);
 const selectedApplicationMethods = ref([...applicationMethod]);
+
+// 선택된 province, city, bank 상태
+const selectedProvince = ref(null)
+const selectedCity = ref(null)
+const selectedBank = ref(null)
+
+const showProvinceDropdown = ref(false);
+const showCityDropdown = ref(false);
+const showBankDropdown = ref(false);
+
+watch(selectedBank, (newBank) => {
+	updateFilters()
+	// selectedBank.value = null;
+});
+
+const selectBank = (bank) => {
+	selectedBank.value = bank;
+	showBankDropdown.value = false;
+};
 
 const banks = computed(() => props.banks)
 
@@ -226,7 +257,7 @@ const updateSelectedMethods = () => {
 const updateFilters = () => {
   const filters = {
     searchQuery: searchQuery.value,
-    banks: selectedBanks.value,
+    banks: selectedBank.value,
     savingsPeriod: selectedSavingsPeriod.value, 
     // financialSector: selectedFinancialSector.value,
     interestCalculation: selectedInterestCalculation.value,
@@ -295,6 +326,11 @@ button:hover {
   color: white;
 }
 
+button:focus {
+  background-color: #6d4c41;
+  color: white;
+}
+
 .sidebar {
   accent-color: #3f2411;
 }
@@ -313,5 +349,23 @@ h3 {
 
 input[type="checkbox"] {
   margin-right: 5px;
+}
+
+.dropdown {
+  width: 100%; /* 부모 컨테이너의 전체 너비를 채우도록 설정 */
+}
+
+.full-width {
+  width: 100%;
+}
+
+.dropdown-menu {
+  width: 100%; /* 드롭다운 메뉴를 부모 요소와 같은 너비로 설정 */
+  max-height: 300px; /* 너무 길 경우 스크롤 표시 */
+  overflow-y: auto;
+}
+
+.dropdown-item {
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
 }
 </style>

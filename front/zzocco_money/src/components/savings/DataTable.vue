@@ -214,7 +214,6 @@ const joinDenyMapping = {
 const filteredProducts = computed(() => {
   currentPage.value = 1
   return props.products.filter((product) => {
-    console.log(props.filters.searchQuery)
     // 검색어 필터링
     const matchesSearch =
       props.filters.searchQuery.trim() === '' || // 검색어가 없으면 무조건 포함
@@ -227,19 +226,14 @@ const filteredProducts = computed(() => {
             .includes(props.filters.searchQuery.toLowerCase())); // 적금 상품명 검색
 
     // 기타 필터링 조건
-    const matchesBank = 
-      props.filters.banks.length === 0 || 
-      props.filters.banks.some((bank) => {
-        const bankName = (props.activeTab === 'deposit'
-          ? product.deposit_id__kor_co_nm
-          : product.saving_id__kor_co_nm
-        )
-          .split(',') // 쉼표로 구분된 문자열을 배열로 변환
-          .map((m) => m.trim()); // 공백 제거
-        // console.log(bankName)
-        // console.log(bank)
-        return bankName[0].includes(bank);
-      })
+
+    const matchesBank = props.filters.banks === '' || 
+      (props.activeTab === 'deposit' 
+        ? product.deposit_id__kor_co_nm 
+        : product.saving_id__kor_co_nm
+      ).includes(props.filters.banks);
+
+
     const matchesPeriod =
       props.filters.savingsPeriod.length === 0 ||
       props.filters.savingsPeriod.includes(product.save_trm);

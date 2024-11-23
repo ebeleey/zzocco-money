@@ -52,7 +52,7 @@ const bankList = ref([])
 
 const initialFilters = {
   searchQuery: "",
-  banks: [],
+  banks: "",
   savingsPeriod: [], // 모든 기간 허용
   interestCalculation: '전체',
   eligibility: [],
