@@ -14,11 +14,13 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    # AbstractUser는 username, email, password를 포함하고 있음!!
+    def default_product_list():
+        return {"deposits": [], "savings": []}
     
+    # AbstractUser는 username, email, password를 포함하고 있음!!
     name = models.CharField(max_length=11) # 사용자 이름
     profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)  # 프로필 이미지
-    product_list = models.JSONField(default=dict, null=True, blank=True)  # 가입 상품 목록
+    product_list = models.JSONField(default=default_product_list) 
     
     GENDER_CHOICES = [
         ('male', '남성'),
