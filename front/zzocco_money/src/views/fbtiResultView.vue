@@ -18,7 +18,7 @@
         </p>
       </div>
       <br>
-      <button class="goRecommend">
+      <button @click="goRecommend" class="goRecommend">
         나에게 딱 맞는<br>예적금 상품 추천받으러 가기
       </button>
     </div>
@@ -28,9 +28,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
-const route = useRoute();
+const route = useRoute()
+const router = useRouter()
 const resultType = route.query.result
 
 const loading = ref(true)
@@ -107,6 +108,9 @@ const resultData = {
   },
 }
 
+const goRecommend = () => {
+  router.push({ name: 'recommend' }); 
+};
 
 </script>
 

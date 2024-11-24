@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div>
     <!-- 컨테이너 -->
     <main class="flex items-center justify-center">
       <div class="text-center">
@@ -42,6 +42,17 @@ body {
   margin: 0;
 }
 
+.goRecommend {
+  padding: 20px 15px;
+  border-radius: 10px;
+  background-color: #3f2411;
+  transition: transform 0.1s ease, box-shadow 0.1s ease; /* 부드러운 애니메이션 추가 */
+}
+
+.goRecommend:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* 그림자 추가 */
+}
 .slogan {
   font-size: 48px;
 }
