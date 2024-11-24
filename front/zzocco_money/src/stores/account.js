@@ -7,24 +7,26 @@ import axios from 'axios'
 export const useAccountStore = defineStore('account', () => {
   const router = useRouter()
   const token = ref(null)
+  const user = ref(null)
 
-  const logIn = function (payload) {
-    const username = payload.username
-    const password = payload.password
-    axios({
-      method: 'post',
-      url: 'http://127.0.0.1:8000/accounts/login/',
-      data: {
-        username: username, password: password
-      }
-    })
-      .then(res => {
-        // console.log(res.data)
-        token.value = res.data.key
-        router.push('/')
-      })
-      .catch(err => console.log(err))
-  }
+  const logIn = async function (payload) {
+    const username = payload.username;
+    const password = payload.password;
+    try {
+      const res = await axios.post('http://127.0.0.1:8000/accounts/login/', {
+        username: username,
+        password: password,
+      });
+      token.value = res.data.key;
+  
+      // 사용자 정보 가져오기
+      await fetchUser();
+  
+      router.push('/');
+    } catch (err) {
+      console.error('로그인 실패:', err);
+    }
+  };
 
   const isLogin = computed(() => {
     if (token.value === null) {
@@ -36,7 +38,26 @@ export const useAccountStore = defineStore('account', () => {
 
   const logout = function () {
     token.value = null
+    user.value = null
   }
 
-  return { logIn, token, isLogin, logout }
+  const fetchUser = async() => {
+    if (!token.value) {
+      return
+    }
+    console.log(token.value)
+    try {
+      const res = await axios.get('http://127.0.0.1:8000/accounts/user/', {
+        headers: {
+          Authorization: `Token ${token.value}`
+        }
+      }) 
+      user.value = res.data
+      console.log(res.data)
+    } catch (err) {
+      console.error('user data 가져오는 데 오류', err)
+    }
+  }
+
+  return { logIn, token, isLogin, logout, fetchUser, user }
 }, { persist: true }) 
