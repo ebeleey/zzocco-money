@@ -7,7 +7,7 @@
           내 금융 성향은 <br />
           어떤 초콜릿일까?
         </h1>
-        <button @click="handleClick" class="mt-4 px-6 py-3 bg-black text-white rounded hover:bg-gray-800">
+        <button @click="handleClick" class="goRecommend">
           내 금융 성향 알아보러 가기
         </button>
       </div>
@@ -46,7 +46,8 @@ body {
   font-size: 48px;
 }
 h1 {
-  padding: 10rem;
+  padding: 12rem;
+  font-size: 50px;
   
 }
 #app {

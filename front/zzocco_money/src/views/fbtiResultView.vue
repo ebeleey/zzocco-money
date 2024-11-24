@@ -148,7 +148,7 @@ const resultData = {
 .goRecommend {
   padding: 10px 15px;
   border-radius: 10px;
-  background-color: #3f2411;;
+  background-color: #3f2411;
 }
 .goRecommend:hover {
   /* background-color: rgb(92, 64, 45); */
