@@ -30,7 +30,6 @@ import { useAccountStore } from "@/stores/account";
 import axios from "axios";
 import StepOne from "@/components/signups/StepOne.vue";
 import StepTwo from "@/components/signups/StepTwo.vue";
-import StepThree from "@/components/signups/StepThree.vue";
 
 
 const store = useAccountStore()
@@ -42,19 +41,17 @@ const currentStep = ref(1); // 현재 단계
 const formData = ref({
 	basicInfo: { name: "", username: "", password: "" },
 	detailedInfo: { gender: "", marriage: "", income_prospect: "", asset_level: "", income_level: "" },
-	financialInfo: { selectedProducts: null },
 });
 
 // 단계별로 렌더링할 컴포넌트 설정
 const currentStepComponent = computed(() => {
 	if (currentStep.value === 1) return StepOne;
 	if (currentStep.value === 2) return StepTwo;
-	if (currentStep.value === 3) return StepThree;
 });
 
 // 다음 단계로 이동
 const goToNextStep = () => {
-	if (currentStep.value < 3) {
+	if (currentStep.value < 2) {
 		currentStep.value += 1;
 	}
 };
