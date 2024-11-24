@@ -55,16 +55,17 @@
             작성자: {{ article.user.username }} &nbsp |  &nbsp
             작성일: {{ article.created_at.slice(0, 10) }}
           </p>
+          
         </div>
-        <!-- <div class="article-stats">
-          <span>🤎 {{ article.likes }}</span>
-          <span>💬 {{ article.comments }}</span>
-        </div> -->
+        <div class="article-stats">
+          <!-- <span>🤎 {{ article.likes }}</span> -->
+          <!-- <span>💬 {{ comments.length }}</span> -->
+        </div>
       </li>
     </ul>
 
     <div style="justify-content: flex-end; display: flex;">
-      <button style="margin-top: 20px;">
+      <button style="margin-top: 20px; padding: 12px;">
         <RouterLink to="articles/post/" style="text-decoration: none; color: white;">게시글 작성하기</RouterLink>
       </button>
     </div>
@@ -145,6 +146,7 @@ const filteredArticles = computed(() => {
 onMounted(async () => {
   try {
     await loadArticles();
+    
   } catch (error) {
     console.error('Failed to load articles:', error);
   }
@@ -265,7 +267,7 @@ const formatDate = (dateString) => {
 .article-category {
   flex-shrink: 0;
   text-align: center;
-  width: 120px;
+  width: 12%;
   margin: auto;
   padding: 6px;
   border-radius: 4px;
@@ -285,7 +287,7 @@ const formatDate = (dateString) => {
   font-weight: bolder;
   color: #333;
   text-decoration: none;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .article-title:hover {

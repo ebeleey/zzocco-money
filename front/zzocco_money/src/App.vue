@@ -1,6 +1,18 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import NavBar from '@/components/navbars/NavBar.vue';
+import { onMounted } from 'vue'
+
+import { useAccountStore } from '@/stores/account';
+const store = useAccountStore()
+
+onMounted(() => {
+  const accountStore = useAccountStore();
+  if (accountStore.token) {
+    accountStore.fetchUser(); // 토큰이 있으면 사용자 정보 로드
+  }
+});
+
 </script>
 
 <template>
@@ -11,6 +23,7 @@ import NavBar from '@/components/navbars/NavBar.vue';
     <div class="content">
       <RouterView class="container" />
     </div>
+
     <footer>
       <br>
       Copyrights ⓒ 2024 zcmn All Rights reserved.

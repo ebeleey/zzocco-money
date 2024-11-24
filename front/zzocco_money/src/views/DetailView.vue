@@ -17,7 +17,10 @@
             작성일: {{ formatDate(currentArticle.created_at) }}
           </p>
         </div>
-
+        <div class="article-actions" v-if="currentArticle.user.username === store.user.username">
+          <button @click="editArticle" class="edit-button">수정 ✏️ </button>
+          <button @click="deleteArticle" class="delete-button">삭제 ❌</button>
+        </div>
         <hr>
         <br>
         <p class="article-content">{{ currentArticle.content }}</p>  
@@ -27,7 +30,10 @@
         <div class="comments-section">
           <p class="comments-count">🗨️ 댓글 {{ comments.length }}</p>
           <ul class="comments-list">
-            <li v-for="(comment, index) in comments" :key="index" class="comment-item">
+            <li v-if="comments.length === 0" class="no-comments-message">
+              아직 작성된 댓글이 없습니다.
+            </li>
+            <li v-else v-for="(comment, index) in comments" :key="index" class="comment-item">
               <p class="comment-author">{{ comment.user.username }}</p>
               <p class="comment-content">{{ comment.content }}</p>
               <p class="comment-meta">{{ formatDate(comment.created_at) }}</p>
@@ -39,7 +45,7 @@
               v-model="newComment"
               placeholder="댓글을 입력하세요"
               class="form-control"
-              rows="3"
+              rows="2"
             ></textarea>
             <button class="btn btn-primary" :disabled="!newComment">댓글 작성</button>
           </form>
@@ -69,9 +75,13 @@
   
   onMounted(async () => {
   try {
+    await store.fetchUser();
+    const user = store.user
     const articleId = route.params.id;
     await communityStore.getArticle(articleId);
     await communityStore.getComments(articleId);
+
+    console.log("user", user)
     isLoading.value = false;
   } catch (error) {
     console.error("Failed to load article or comments:", error);
@@ -79,8 +89,6 @@
   }
 });
   
-  // 댓글 작성
-  // 댓글 작성
 const submitComment = async () => {
   if (!newComment.value.trim()) return;
   try {
@@ -99,6 +107,10 @@ const submitComment = async () => {
     console.error("Failed to submit comment:", error);
     // 여기에 에러 처리 로직을 추가할 수 있습니다 (예: 사용자에게 알림)
   }
+};
+
+const editArticle = () => {
+  router.push({ name: 'EditView', params: { id: currentArticle.value.id } });
 };
   
 
@@ -121,6 +133,17 @@ h2 {
 text-align: left;
 font-family: 'Pretendard-Regular';
 }
+
+.article-actions {
+  text-algin: right;
+}
+
+.article-actions button {
+  background-color: white;
+  color: #5f5858;
+}
+
+
 
 .detail-page {
   margin: 20px auto;
@@ -198,7 +221,7 @@ font-family: 'Pretendard-Regular';
 }
 
 .comment-form textarea {
-
+  font-size: 15px;
 }
 
 .comment-form button {
@@ -207,12 +230,19 @@ font-family: 'Pretendard-Regular';
   border: none;
   padding: 10px 15px;
   cursor: pointer;
-  width: 120px;
+  width: 100px;
   margin: 0 10px;
+  font-size: 14px;
 }
 
 .comment-form button:disabled {
   background-color: #968d84;
   cursor: not-allowed;
+}
+
+.no-comments-message {
+  color: #968d84;
+  font-size: 14px;
+  padding: 0 10px;;
 }
 </style>
