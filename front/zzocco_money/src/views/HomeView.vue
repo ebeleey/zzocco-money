@@ -1,11 +1,11 @@
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="flex">
     <!-- 컨테이너 -->
-    <main class="flex-1 flex items-center justify-center bg-gray-50">
+    <main class="flex items-center justify-center">
       <div class="text-center">
-        <h1 class="text-3xl font-bold mb-4">
-          나도 몰랐던 내 금융 성향, <br />
-          지금 확인해보세요!
+        <h1 class="slogan">
+          내 금융 성향은 <br />
+          어떤 초콜릿일까?
         </h1>
         <button @click="handleClick" class="mt-4 px-6 py-3 bg-black text-white rounded hover:bg-gray-800">
           내 금융 성향 알아보러 가기
@@ -42,6 +42,9 @@ body {
   margin: 0;
 }
 
+.slogan {
+  font-size: 48px;
+}
 h1 {
   padding: 10rem;
   

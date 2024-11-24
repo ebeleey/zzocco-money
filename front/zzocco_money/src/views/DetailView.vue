@@ -23,7 +23,7 @@
         <p class="article-content">{{ currentArticle.content }}</p>  
         <br>
         <!-- <hr> -->
-        <div class="article-actions" v-if="currentArticle.user.username === store.user.username">
+        <div class="article-actions" v-if="currentArticle.user.username === store.user?.username">
           <button @click="editArticle" class="edit-button">수정 ✏️ </button>
           <button @click="confirmDelete" class="delete-button">삭제 ❌</button>
         </div>
@@ -63,7 +63,7 @@
             </li>
           </ul>
           <!-- 댓글 작성 -->
-          <form @submit.prevent="submitComment" class="comment-form">
+          <form v-if="store.user" @submit.prevent="submitComment" class="comment-form">
             <textarea
               v-model="newComment"
               placeholder="댓글을 입력하세요"
@@ -72,6 +72,7 @@
             ></textarea>
             <button class="btn btn-primary" :disabled="!newComment">댓글 작성</button>
           </form>
+          <p v-else style="text-align: center;">댓글을 작성하려면 로그인하세요.</p>
           </div>
         </div>
       </div>
@@ -107,6 +108,17 @@
   } catch (error) {
     console.error("Failed to load article or comments:", error);
     isLoading.value = false;
+
+    // 로그인 상태가 아니더라도 게시글 읽기는 허용
+    if (error.response && error.response.status === 401) {
+      try {
+        const articleId = route.params.id;
+        await communityStore.getArticle(articleId, { anonymous: true });
+        await communityStore.getComments(articleId, { anonymous: true });
+      } catch (e) {
+        console.error("Failed to load article or comments for anonymous user:", e);
+      }
+    }
   }
 });
 
