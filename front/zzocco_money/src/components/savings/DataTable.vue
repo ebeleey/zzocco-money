@@ -72,7 +72,10 @@
       >
         <div class="modal-content">
           <button class="close-btn" @click="closeDetailModal">×</button>
-          <h2>{{ activeTab === 'deposit' ? selectedProduct.deposit_id__fin_prdt_nm : selectedProduct.saving_id__fin_prdt_nm }}</h2>
+          
+          <header>
+            <h2>{{ activeTab === 'deposit' ? selectedProduct.deposit_id__fin_prdt_nm : selectedProduct.saving_id__fin_prdt_nm }}</h2>
+          </header>
           
           <div class="modal-details">
             <div class="detail-row">
@@ -132,6 +135,10 @@
               <span class="detail-value">{{ selectedProduct.intr_rate_type_nm }}</span>
             </div>
           </div>
+          <div v-if="isLoggedIn" class="modal-btn">
+            <button v-if="!isAdded" @click="manageProduct('add')">가입하기</button>
+            <button v-else @click="manageProduct('remove')">가입 취소하기</button>
+          </div>
         </div>
       </div>
 
@@ -153,8 +160,63 @@
 
 <script setup>
 import { computed, ref, watch } from "vue";
+import { useAccountStore } from "@/stores/account";
+import axios from "axios";
 
-// Props 정의
+const accountStore = useAccountStore()
+
+// 로그인 여부
+const isLoggedIn = computed(() => accountStore.isLogin)
+
+// 상품 가입 여부
+const isAdded = computed(() => {
+  // console.log(accountStore.user)
+  // accountStore.fetchUser()
+  const productType = props.activeTab === 'deposit' ? 'deposits' : 'savings'
+  const productId = selectedProduct.value.id
+
+  // 사용자의 상품 목록이 있는지 확인
+  // console.log(accountStore.user.product_list[productType])
+  if (!accountStore.user?.product_list[productType]) {
+    return false
+  }
+
+  // 해당 타입의 상품 목록이 있는지 확인
+  const userProducts = accountStore.user.product_list[productType]
+  if (!userProducts) {
+    return false
+  }
+  console.log(typeof(productId))
+  console.log(typeof(userProducts[0]))
+
+  // 선택된 상품의 ID가 사용자의 상품 목록에 있는지 확인
+  return userProducts.includes(productId)
+})
+
+const manageProduct = async (action) => {
+  console.log(selectedProduct)
+  const productType = props.activeTab === 'deposit' ? 'deposits' : 'savings';
+  const productId = selectedProduct.value.id
+
+  // console.log(productId)
+  try {
+    const response = await axios.post('http://127.0.0.1:8000/accounts/manage-product/', {
+      action: action,
+      product_type: productType,
+      product_id: productId
+    }, {
+      headers: {
+        'Authorization': `Token ${accountStore.token}`
+      }
+    });
+    accountStore.fetchUser()
+  } catch (error) {
+    console.error('Error adding product:', error);
+    // 에러 처리 로직 (예: 사용자에게 에러 메시지 표시)
+  }
+}
+
+// Props 정의 => ㅑㄴ
 const props = defineProps({
   filters: {
     type: Object,
@@ -190,6 +252,7 @@ const selectedProduct = ref(null);
 
 // 함수를 ref 또는 computed로 정의
 const openDetailModal = (product) => {
+  console.log(product)
   selectedProduct.value = product;
 };
 
@@ -392,6 +455,16 @@ defineExpose({
   position: relative;
 }
 
+.modal-btn {
+  justify-content: center;
+  display: flex;
+}
+
+.modal-btn button {
+  padding: 10px 20px;
+  margin-top: 15px;
+}
+
 .close-btn {
   position: absolute;
   top: 10px;
@@ -557,7 +630,6 @@ td {
 .col-eligibility {
   width: 10%; /* 가입 대상 열 */
 }
-
 
 thead th:first-child {
   border-top-left-radius: 10px; /* 좌측 상단 반경 */

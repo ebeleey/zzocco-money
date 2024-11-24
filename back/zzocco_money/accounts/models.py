@@ -18,7 +18,7 @@ class User(AbstractUser):
     
     name = models.CharField(max_length=11) # 사용자 이름
     profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)  # 프로필 이미지
-    product_list = models.JSONField(null=True, blank=True)  # 가입 상품 목록
+    product_list = models.JSONField(default=dict, null=True, blank=True)  # 가입 상품 목록
     
     GENDER_CHOICES = [
         ('male', '남성'),
@@ -56,5 +56,24 @@ class User(AbstractUser):
     asset_level = models.CharField(max_length=20, choices=ASSET_LEVEL_CHOICES, default='below_10m')  # 총 자산 규모
     income_level = models.CharField(max_length=20, choices=INCOME_LEVEL_CHOICES, default='below_30m')  # 연 평균 소득
     
+    def add_product(self, product_type, product_id):
+        if product_type not in ['deposits', 'savings']:
+            raise ValueError("Invalid product type")
+        
+        if self.product_list is None:
+            self.product_list = {}
+
+        if product_type not in self.product_list:
+            self.product_list[product_type] = []
+        
+        if product_id not in self.product_list[product_type]:
+            self.product_list[product_type].append(product_id)
+            self.save()
+
+    def remove_product(self, product_type, product_id):
+        if product_type in self.product_list and product_id in self.product_list[product_type]:
+            self.product_list[product_type].remove(product_id)
+            self.save()
+
     def __str__(self):
         return self.username  # 사용자 이름 반환
