@@ -176,7 +176,7 @@
       <!-- '이전' 버튼 추가 -->
       <button @click="$emit('previous-step')">이전</button>
       <!-- '다음' 버튼 추가 -->
-      <button @click="$emit('next-step')">다음</button>
+      <button @click="$emit('submit')">회원가입 완료</button>
       
     </div>
   </div>
