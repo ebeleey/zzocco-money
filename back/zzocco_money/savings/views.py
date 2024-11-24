@@ -98,7 +98,9 @@ def getDeposit(request):
     # data = {
     #     "deposit": deposits_serializer.data  # Deposit data with nested options
     # }
+    
     options = DepositOption.objects.select_related('deposit_id').values(
+        'id',
         'deposit_id__fin_co_no',
         'deposit_id__kor_co_nm',
         'deposit_id__fin_prdt_cd',
@@ -197,6 +199,7 @@ def getSaving(request):
                 serializer.save(saving_id=saving_id)
 
     options = SavingOption.objects.select_related('saving_id').values(
+        'id',
         'saving_id__fin_co_no',
         'saving_id__fin_prdt_cd',
         'saving_id__kor_co_nm',
