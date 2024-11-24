@@ -178,13 +178,8 @@ const selectedInterestCalculation = ref(interestCalculation[0]);
 const selectedEligibility = ref([]);
 const selectedApplicationMethods = ref([...applicationMethod]);
 
-// 선택된 province, city, bank 상태
-const selectedProvince = ref(null)
-const selectedCity = ref(null)
-const selectedBank = ref(null)
-
-const showProvinceDropdown = ref(false);
-const showCityDropdown = ref(false);
+// 선택된 bank 상태
+const selectedBank = ref("")
 const showBankDropdown = ref(false);
 
 watch(selectedBank, (newBank) => {

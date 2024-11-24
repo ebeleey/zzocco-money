@@ -81,7 +81,6 @@ const handleSubmit = () => {
       income_prospect: user.detailedInfo.income_prospect,
       asset_level: user.detailedInfo.asset_level,
       income_level: user.detailedInfo.income_level,
-      product_list: user.financialInfo.selectedProducts
     }
   })
   .then(res => {

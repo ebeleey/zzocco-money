@@ -177,15 +177,15 @@ const isAdded = computed(() => {
 
   // 사용자의 상품 목록이 있는지 확인
   // console.log(accountStore.user.product_list[productType])
-  if (!accountStore.user?.product_list[productType]) {
-    return false
-  }
+  // if (!accountStore.user?.product_list?[productType]) {
+  //   return false
+  // }
 
   // 해당 타입의 상품 목록이 있는지 확인
-  const userProducts = accountStore.user.product_list[productType]
-  if (!userProducts) {
-    return false
-  }
+  const userProducts = accountStore.user?.product_list[productType]
+  // if (!userProducts) {
+  //   return false
+  // }
   console.log(typeof(productId))
   console.log(typeof(userProducts[0]))
 
@@ -288,8 +288,10 @@ const filteredProducts = computed(() => {
             .toLowerCase()
             .includes(props.filters.searchQuery.toLowerCase())); // 적금 상품명 검색
 
+    console.log(props.filters.searchQuery.trim())
     // 기타 필터링 조건
 
+    
     const matchesBank = props.filters.banks === '' || 
       (props.activeTab === 'deposit' 
         ? product.deposit_id__kor_co_nm 
