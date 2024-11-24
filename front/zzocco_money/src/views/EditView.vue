@@ -3,38 +3,46 @@
     <h1 class="page-title">게시글 수정</h1>
     
     <div class="post-page">
-      <div class="post-title">
-        <!-- 게시판 선택 (읽기 전용) -->
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" disabled>
-                {{ board_name || '게시판 선택' }}
-            </button>
+      <div v-if="isLoading" class="loading">Loading...</div>
+      <div v-else>
+        <div class="post-title">
+          <!-- 게시판 선택 (읽기 전용) -->
+          <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" disabled>
+                  {{ board_name || '게시판 선택' }}
+              </button>
+          </div>
+          <div class="form-title">
+            <input
+              type="text"
+              id="title"
+              v-model="title"
+              placeholder="제목을 입력하세요"
+              class="form-control"
+            />
+          </div>
         </div>
-        <div class="form-title">
-          <input
-            type="text"
-            id="title"
-            v-model="title"
-            placeholder="제목을 입력하세요"
-            class="form-control"
-          />
-        </div>
+        <form class="form-content" @submit.prevent="submitEdit">
+          <div class="form-group">
+            <textarea
+              id="content"
+              v-model="content"
+              placeholder="내용을 입력하세요"
+              rows="15"
+              class="form-control"
+            ></textarea>
+          </div>
+          <div v-if="error" class="error-message">
+            <p>{{ error }}</p>
+          </div>
+          <div class="button-group">
+            <button type="button" class="cancel-button" @click="goBack">취소</button>
+            <button type="submit" class="edit-button">수정</button>
+          </div>
+
+          
+        </form>
       </div>
-      <form class="form-content" @submit.prevent="submitEdit">
-        <div class="form-group">
-          <textarea
-            id="content"
-            v-model="content"
-            placeholder="내용을 입력하세요"
-            rows="15"
-            class="form-control"
-          ></textarea>
-        </div>
-        <div v-if="error" class="error-message">
-          <p>{{ error }}</p>
-        </div>
-        <button type="submit" style="padding: 10px 20px;">수정 완료</button>
-      </form>
     </div>
   </div>
 </template>
@@ -43,25 +51,36 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useCommunityStore } from '@/stores/community';
+import { storeToRefs } from 'pinia';
 
 const route = useRoute();
 const router = useRouter();
 const communityStore = useCommunityStore();
+const { currentArticle } = storeToRefs(communityStore);
 
 const title = ref('');
 const content = ref('');
 const board_name = ref('');
 const error = ref('');
+const isLoading = ref(true);
 
 onMounted(async () => {
   try {
-    const article = await communityStore.getArticle(route.params.id);
-    title.value = article.title;
-    content.value = article.content;
-    board_name.value = article.board_name; // 게시판 이름 읽기 전용으로 설정
+    await communityStore.getArticle(route.params.id);
+    
+    // currentArticle이 로드된 후 데이터 설정
+    if (currentArticle.value) {
+      title.value = currentArticle.value.title;
+      content.value = currentArticle.value.content;
+      board_name.value = currentArticle.value.board_name;
+    } else {
+      error.value = '게시글을 찾을 수 없습니다.';
+    }
   } catch (err) {
-    console.error(err);
+    console.error('게시글 로드 에러:', err);
     error.value = '게시글 로드 중 오류가 발생했습니다.';
+  } finally {
+    isLoading.value = false;
   }
 });
 
@@ -76,11 +95,15 @@ const submitEdit = async () => {
       title: title.value,
       content: content.value,
     });
-    router.push(`/community/${route.params.id}`);
+    router.push(`/articles/${route.params.id}/`);
   } catch (err) {
-    console.error(err);
+    console.error('게시글 수정 에러:', err);
     error.value = '게시글 수정 중 오류가 발생했습니다.';
   }
+};
+
+const goBack = () => {
+  router.push(`/articles/${route.params.id}`);
 };
 </script>
 
@@ -125,6 +148,24 @@ h1 {
 label {
   display: block;
   font-weight: bold;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+}
+
+.edit-button,
+.cancel-button {
+  margin-left: 10px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-button {
+  background-color: #857c75;
 }
 
 input,

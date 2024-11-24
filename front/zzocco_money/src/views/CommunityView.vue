@@ -52,8 +52,8 @@
           </RouterLink>
           <p class="article-meta">
             <!-- <img :src="article.profile_image" alt="프로필 이미지" class="profile-img" /> -->
-            작성자: {{ article.user.username }} &nbsp |  &nbsp
-            작성일: {{ article.created_at.slice(0, 10) }}
+            {{ article.user.username }} &nbsp |  &nbsp
+            {{ formatDate(article.created_at) }}
           </p>
           
         </div>
@@ -190,13 +190,10 @@ const changePage = (page) => {
   }
 };
 
-// 날짜 포맷 함수
 const formatDate = (dateString) => {
   const date = new Date(dateString);
-  const formattedDate = date.toLocaleDateString();
-  const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  return `${formattedDate} ${formattedTime}`;
-}
+  return date.toLocaleString();
+};
 </script>
   
 <style lang="scss" scoped>
