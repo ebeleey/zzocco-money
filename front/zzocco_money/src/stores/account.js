@@ -39,6 +39,7 @@ export const useAccountStore = defineStore('account', () => {
   const logout = function () {
     token.value = null
     user.value = null
+    router.go(0)
   }
 
   const fetchUser = async() => {

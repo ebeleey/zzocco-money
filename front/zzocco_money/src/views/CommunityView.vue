@@ -65,7 +65,7 @@
     </ul>
 
     <div style="justify-content: flex-end; display: flex;">
-      <button style="margin-top: 20px; padding: 12px;">
+      <button v-if="useAccountStore().isLogin" style="margin-top: 20px; padding: 12px;">
         <RouterLink to="articles/post/" style="text-decoration: none; color: white;">게시글 작성하기</RouterLink>
       </button>
     </div>
@@ -99,6 +99,7 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { useCommunityStore } from '@/stores/community';
 import { storeToRefs } from 'pinia';
+import { useAccountStore } from '@/stores/account';
 
 const communityStore = useCommunityStore();
 const { articles } = storeToRefs(communityStore);
