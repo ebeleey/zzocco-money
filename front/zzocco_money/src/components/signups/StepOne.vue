@@ -12,6 +12,11 @@
 			</div>
 
 			<div class="form-group">
+				<label for="email">이메일</label>
+				<input type="email" id="email" v-model="formData.basicInfo.email" placeholder="이메일를 입력하세요." required />
+			</div>
+
+			<div class="form-group">
 				<label for="password">비밀번호</label>
 				<input type="password" id="password" v-model="formData.basicInfo.password" placeholder="비밀번호를 입력하세요." required />
 			</div>

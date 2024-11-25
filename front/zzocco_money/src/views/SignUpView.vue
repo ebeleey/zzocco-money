@@ -39,7 +39,7 @@ const goToLogin = function() {
 }
 const currentStep = ref(1); // 현재 단계
 const formData = ref({
-	basicInfo: { name: "", username: "", password: "" },
+	basicInfo: { name: "", username: "", password: "", email: "" },
 	detailedInfo: { gender: "", marriage: "", income_prospect: "", asset_level: "", income_level: "" },
 });
 
@@ -73,6 +73,7 @@ const handleSubmit = () => {
       name: user.basicInfo.name,
       username: user.basicInfo.username,
       password: user.basicInfo.password,
+      email: user.basicInfo.email,
       gender: user.detailedInfo.gender,
       marriage: user.detailedInfo.marriage,
       income_prospect: user.detailedInfo.income_prospect,
