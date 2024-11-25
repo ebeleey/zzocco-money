@@ -15,6 +15,7 @@ import fbtiTestView from '@/views/fbtiTestView.vue'
 import EditView from '@/views/EditView.vue'
 import UserInfo from '@/components/profiles/UserInfo.vue'
 import UserProducts from '@/components/profiles/UserProducts.vue'
+import PasswordChange from '@/components/profiles/PasswordChange.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,7 +43,8 @@ const router = createRouter({
 
       children: [
         { path: '', name: 'userInfo', component: UserInfo },
-        { path: 'user-product', name: 'userProduct', component: UserProducts }
+        { path: 'user-product', name: 'userProduct', component: UserProducts },
+        { path: 'password-change', name: 'passwordChange', component: PasswordChange },
       ]
     },
     {
