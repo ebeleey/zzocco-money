@@ -37,6 +37,7 @@ const router = useRouter()
 const goToLogin = function() {
   router.push('/login')
 }
+
 const currentStep = ref(1); // 현재 단계
 const formData = ref({
 	basicInfo: { name: "", username: "", password: "", email: "" },

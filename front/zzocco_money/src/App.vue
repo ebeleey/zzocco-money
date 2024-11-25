@@ -1,20 +1,3 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import NavBar from '@/components/navbars/NavBar.vue';
-import { onMounted } from 'vue'
-
-import { useAccountStore } from '@/stores/account';
-const store = useAccountStore()
-
-onMounted(() => {
-  const accountStore = useAccountStore();
-  if (accountStore.token) {
-    accountStore.fetchUser(); // 토큰이 있으면 사용자 정보 로드
-  }
-});
-
-</script>
-
 <template>
   <div class="app-wrapper">
     <div class="nav">
@@ -30,6 +13,27 @@ onMounted(() => {
     </footer>
   </div>
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import { RouterLink, RouterView } from 'vue-router'
+import { useAccountStore } from '@/stores/account';
+
+import NavBar from '@/components/navbars/NavBar.vue';
+
+const store = useAccountStore()
+// const userId = ref(store.user.id)
+
+onMounted(() => {
+  const accountStore = useAccountStore();
+  if (accountStore.token) {
+    accountStore.fetchUser(); // 토큰이 있으면 사용자 정보 로드
+  }
+});
+
+</script>
+
+
 
 <style scoped>
 .app-wrapper {

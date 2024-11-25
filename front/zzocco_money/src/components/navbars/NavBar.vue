@@ -70,10 +70,12 @@
 import { useAccountStore } from '@/stores/account'
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router';
+import { RouterLink, RouterView } from 'vue-router';
 
 const store = useAccountStore()
 const router = useRouter()
 
+// const userId = ref(store.user?.id);
 // 로그인 상태 즉각 적용
 const isLogin = computed(() => store.isLogin)
 

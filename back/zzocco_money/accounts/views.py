@@ -71,3 +71,16 @@ def manage_product(request):
         return Response({'message': message}, status=status.HTTP_200_OK)
     except ValueError as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_profile_image(request):
+    user = request.user
+    if 'profile_image' in request.FILES:
+        user.profile_image = request.FILES['profile_image']
+        image_url = user.profile_image.url
+        user.save()
+        return Response({'message': '프로필 사진이 성공적으로 업데이트되었습니다.', 
+        'imageUrl': image_url}, status=status.HTTP_200_OK)
+    else:
+        return Response({'error': '프로필 사진이 제공되지 않았습니다.'}, status=status.HTTP_400_BAD_REQUEST)

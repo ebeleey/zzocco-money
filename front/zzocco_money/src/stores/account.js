@@ -21,7 +21,6 @@ export const useAccountStore = defineStore('account', () => {
   
       // 사용자 정보 가져오기
       await fetchUser();
-  
       router.push('/');
     } catch (err) {
       console.error('로그인 실패:', err);
@@ -39,7 +38,17 @@ export const useAccountStore = defineStore('account', () => {
   const logout = function () {
     token.value = null
     user.value = null
-    router.go(0)
+    try {
+      // router.go(0)
+      router.push('/');
+
+    } catch (err) {
+      console.log(err)
+      // router.go(-1)
+  
+      router.push('/');
+    }
+    // router.go(0)
   }
 
   const fetchUser = async() => {

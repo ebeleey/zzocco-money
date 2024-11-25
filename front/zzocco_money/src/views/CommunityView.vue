@@ -323,6 +323,7 @@ const formatDate = (dateString) => {
   align-items: center;
   gap: 4px;
 }
+
 .page-title {
   text-align: center;
   margin-top: 70px; 

@@ -13,6 +13,8 @@ import PostArticleView from '@/views/PostArticleView.vue'
 import fbtiResultView from '@/views/fbtiResultView.vue'
 import fbtiTestView from '@/views/fbtiTestView.vue'
 import EditView from '@/views/EditView.vue'
+import UserInfo from '@/components/profiles/UserInfo.vue'
+import UserProducts from '@/components/profiles/UserProducts.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,7 +37,13 @@ const router = createRouter({
     {
       path: '/profile',
       name: 'profile',
-      component: ProfileView
+      component: ProfileView,
+      redirect: { name: 'userInfo' }, // 이 줄을 추가합니다
+
+      children: [
+        { path: '', name: 'userInfo', component: UserInfo },
+        { path: 'user-product', name: 'userProduct', component: UserProducts }
+      ]
     },
     {
       path: '/savings',

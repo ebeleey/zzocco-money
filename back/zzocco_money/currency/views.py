@@ -8,7 +8,7 @@ import requests
 # Create your views here.
 @api_view(['GET'])
 def get_exchange_rates(request):
-    url = 'https://www.koreaexim.go.kr/site/program/financial/exchangeJSON'
+    url = 'http://www.koreaexim.go.kr/site/program/financial/exchangeJSON'
     params = {
         "authkey": settings.CURRENCY_API_KEY,
         "searchdate": "20241122",
