@@ -9,6 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'name',
+            'email',
             'password',
             'gender',
             'marriage',
@@ -16,7 +17,8 @@ class UserSerializer(serializers.ModelSerializer):
             'asset_level',
             'income_level',
             'profile_image',
-            'product_list'
+            'product_list',
+            'finance_type'
         ]
 
         extra_kwargs = {'password': {'write_only': True}}  # 비밀번호는 쓰기 전용
