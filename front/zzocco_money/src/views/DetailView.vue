@@ -54,7 +54,7 @@
                 <div class="comment-footer">
                   <p class="comment-meta">{{ formatDate(comment.created_at) }}</p>
                   <!-- 댓글 작성자만 수정/삭제 버튼 표시 -->
-                  <div v-if="comment.user.username === store.user.username" class="comment-actions">
+                  <div v-if="comment.user.username === store.user?.username" class="comment-actions">
                     <button @click="startEdit(comment)" class="edit-button">수정</button>
                     <button @click="confirmDeleteComment(comment)" class="delete-button">삭제</button>
                   </div>
@@ -72,7 +72,7 @@
             ></textarea>
             <button class="btn btn-primary" :disabled="!newComment">댓글 작성</button>
           </form>
-          <p v-else style="text-align: center;">댓글을 작성하려면 로그인하세요.</p>
+          <p v-else style="text-align: center;">댓글을 작성하려면 <RouterLink to="/login" style="text-decoration: none; color: black;">로그인</RouterLink>하세요.</p>
           </div>
         </div>
       </div>
@@ -99,7 +99,6 @@
   onMounted(async () => {
   try {
     await store.fetchUser();
-    const user = store.user
     const articleId = route.params.id;
     await communityStore.getArticle(articleId);
     await communityStore.getComments(articleId);
