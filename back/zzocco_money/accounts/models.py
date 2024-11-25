@@ -20,8 +20,14 @@ class User(AbstractUser):
     # AbstractUser는 username, email, password를 포함하고 있음!!
     name = models.CharField(max_length=11) # 사용자 이름
     profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)  # 프로필 이미지
-    product_list = models.JSONField(default=default_product_list) 
+    product_list = models.JSONField(default=default_product_list)
     
+    FINANCE_TYPE_CHOICES = [
+        ("saver", "저축형"),
+        ("investor", "투자형"), 
+        ("spender", "소비형"), 
+        ("planner", "안정형")
+    ]
     GENDER_CHOICES = [
         ('male', '남성'),
         ('female', '여성'),
@@ -52,6 +58,7 @@ class User(AbstractUser):
         ('above_300m', '3억 원 이상'),
     ]
     
+    finance_type = models.CharField(max_length=20, choices=FINANCE_TYPE_CHOICES, default='stable_increase')
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='male')  # 성별
     marriage = models.CharField(max_length=10, choices=MARRIAGE_CHOICES, default='single')  # 혼인 여부
     income_prospect = models.CharField(max_length=20, choices=INCOME_PROSPECT_CHOICES, default='stable_increase')  # 수입 전망
