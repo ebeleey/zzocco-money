@@ -1,20 +1,19 @@
 <template>
   <div class="sidebar">
-    <!-- 정렬 버튼 -->
-    <div class="sort-buttons">
+    <!-- 검색 -->
+    <div class="search-group">
       <form class="search-bar" @submit.prevent="updateFilters" role="search">
-        <div class="input-group">
-          <input 
-            v-model="searchQuery" 
-            class="form-control me-2" 
-            type="search" 
-            placeholder="검색어를 입력하세요" 
-            aria-label="Search"
-          />
-          <button class="btn btn-outline-success search-button" type="submit">검색</button>
-        </div>
+        <input 
+          v-model="searchQuery" 
+          class="form-control" 
+          type="search" 
+          placeholder="검색어를 입력하세요" 
+          aria-label="Search"
+        />
+        <button class="search-button" type="submit">검색</button>
       </form>
     </div>
+    
     <!-- 단일 선택: 저축 예정 기간 -->
     <div class="filter-group">
       <h3>저축 예정 기간</h3>
@@ -267,28 +266,19 @@ const updateFilters = () => {
 </script>
 
 <style scoped>
-.sort-buttons {
-  display: flex;
-  gap: 10px;
+.search-group {
   margin-bottom: 20px;
-  justify-content: flex-end;
 }
 
-.search-bar .input-group {
+.search-bar{
   display: flex;
-  width: 100%;
-}
-
-.search-bar .form-control {
-  flex-grow: 1; /* 검색창을 버튼보다 넓게 만들기 */
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 5px;
 }
 
 .search-button {
-  background-color: #3f2411;
-  border: 1px solid white; /* 초록색 테두리에서 흰색으로 변경 */
-  color: white; /* 글씨도 흰색으로 변경 */
-  border-radius: 5px;
-  padding: 8px 12px;
+  width: 80px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -297,10 +287,14 @@ const updateFilters = () => {
   background-color: #6d4c41;
 }
 
+
+
 .button-group {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 }
+
+
 
 button {
   margin: 2px;
@@ -328,6 +322,7 @@ button:focus {
 
 .sidebar {
   accent-color: #3f2411;
+  width: 260px;
 }
 
 .filter-group {
