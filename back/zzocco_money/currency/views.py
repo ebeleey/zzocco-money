@@ -14,7 +14,7 @@ def get_exchange_rates(request):
         "searchdate": "20241122",
         "data": "AP01"
     }
-    response = requests.get(url, params=params)
+    response = requests.get(url, params=params, verify=False)
     exchange_rates = response.json()
 
     data = []
