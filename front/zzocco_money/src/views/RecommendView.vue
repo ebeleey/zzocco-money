@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="page-title">
-      {{ user.name }}님에게<br />
+      <span class="user-name">{{ user.name }}</span>님에게<br />
       딱 맞는 예적금 상품 Top3
     </h1>
     <!-- <h4>{{ user.name }}님과 비슷한 관심사와 상황의<br />
@@ -9,11 +9,16 @@
 
     <!-- <h4>{{ user.name }}님의 소비 성향과 재정 목표를 기반으로<br />
       최적의 예적금 상품을 추천드려요.</h4> -->
-    <h4>{{ user.name }}님의 소비 성향과 재정 목표를 기반으로<br />
+      <div v-if="explanations.length === 0" class="loading-container">
+        <p class="description">
+          {{ user.name }}님을 위한 맞춤형 추천 리스트를 준비하고 있어요 <span class="dots"></span><br> 
+          잠시만 기다려주세요!
+        </p>
+        <div class="spinner"></div>
+      </div>
+    <div v-else class="recommend-page">
+      <h4>{{ user.name }}님의 소비 성향과 재정 목표를 기반으로<br />
       다른 사용자들이 선택한 인기 예적금 상품을 모아봤어요.</h4>
-
-    <!-- 슬라이드 생성 -->
-    <div class="recommend-page">
       <div
       v-for="(item, index) in slides"
       :key="index"
@@ -32,8 +37,6 @@
         </div>
       </div>
     </div>
-
- 
   </div>
 </template>
 
@@ -45,7 +48,6 @@ import { ref, onMounted } from "vue";
 const accountStore = useAccountStore();
 const user = ref({});
 const slides = ref([]);
-const currentSlide = ref(0); // 현재 슬라이드 인덱스
 const api_key = import.meta.env.VITE_OPENAI_KEY
 
 const explanations = ref([]); // 각 상품에 대한 설명을 저장할 배열
@@ -213,7 +215,63 @@ hr {
 
 p {
   margin-top: 20px;
-
-
 }
+
+.user-name {
+  font-size: 54px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #88635d; 
+  border-radius: 50%;
+  animation: spin 2.5s linear infinite;
+  margin-bottom: 10px; /* 텍스트와 간격 */
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.description {
+  text-align: center;
+}
+
+.dots::after {
+  content: "";
+  display: inline-block;
+  animation: dots 2s steps(3, end) infinite;
+}
+
+@keyframes dots {
+  0% {
+    content: "";
+  }
+  25% {
+    content: ".";
+  }
+  50% {
+    content: ". .";
+  }
+  75% {
+    content: ". . .";
+  }
+}
+
+
 </style>
