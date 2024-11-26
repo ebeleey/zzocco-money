@@ -216,7 +216,7 @@ const manageProduct = async (action) => {
   }
 }
 
-// Props 정의 => ㅑㄴ
+// Props 정의 
 const props = defineProps({
   filters: {
     type: Object,

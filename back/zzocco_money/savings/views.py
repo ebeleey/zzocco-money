@@ -220,3 +220,85 @@ def getSaving(request):
     )
 
     return JsonResponse(list(options), safe=False)
+    
+@api_view(['GET'])
+def get_single_deposit(request, pk):
+    # select_related를 사용하여 관련된 Deposit 데이터를 미리 가져옵니다.
+    deposit_option = DepositOption.objects.select_related('deposit_id').get(pk=pk)
+
+    # DepositOption 데이터를 직렬화합니다.
+    deposit_option_data = DepositOptionSerializer(deposit_option).data
+
+    # 관련된 Deposit 데이터를 직접 추가합니다.
+    deposit_data = {
+        'saving_id__fin_co_no': deposit_option.deposit_id.fin_co_no,
+        'saving_id__fin_prdt_cd': deposit_option.deposit_id.fin_prdt_cd,
+        'saving_id__kor_co_nm': deposit_option.deposit_id.kor_co_nm,
+        'saving_id__fin_prdt_nm': deposit_option.deposit_id.fin_prdt_nm,
+        'saving_id__join_way': deposit_option.deposit_id.join_way,
+        'saving_id__join_deny': deposit_option.deposit_id.join_deny,
+        'saving_id__join_member': deposit_option.deposit_id.join_member,
+        'saving_id__spcl_cnd': deposit_option.deposit_id.spcl_cnd,
+        'saving_id__etc_note': deposit_option.deposit_id.etc_note,
+        'saving_id__max_limit': deposit_option.deposit_id.max_limit,
+    }
+
+    # 두 데이터를 합칩니다.
+    response_data = {**deposit_option_data, **deposit_data}
+
+    return Response(response_data)
+
+
+@api_view(['GET'])
+def get_single_deposit(request, pk):
+    # select_related를 사용하여 관련된 Deposit 데이터를 미리 가져옵니다.
+    deposit_option = DepositOption.objects.select_related('deposit_id').get(pk=pk)
+
+    # DepositOption 데이터를 직렬화합니다.
+    deposit_option_data = DepositOptionSerializer(deposit_option).data
+
+    # 관련된 Deposit 데이터를 직접 추가합니다.
+    deposit_data = {
+        'deposit_id__fin_co_no': deposit_option.deposit_id.fin_co_no,
+        'deposit_id__fin_prdt_cd': deposit_option.deposit_id.fin_prdt_cd,
+        'deposit_id__kor_co_nm': deposit_option.deposit_id.kor_co_nm,
+        'deposit_id__fin_prdt_nm': deposit_option.deposit_id.fin_prdt_nm,
+        'deposit_id__join_way': deposit_option.deposit_id.join_way,
+        'deposit_id__join_deny': deposit_option.deposit_id.join_deny,
+        'deposit_id__join_member': deposit_option.deposit_id.join_member,
+        'deposit_id__spcl_cnd': deposit_option.deposit_id.spcl_cnd,
+        'deposit_id__etc_note': deposit_option.deposit_id.etc_note,
+        'deposit_id__max_limit': deposit_option.deposit_id.max_limit,
+    }
+
+    # 두 데이터를 합칩니다.
+    response_data = {**deposit_option_data, **deposit_data}
+
+    return Response(response_data)
+
+@api_view(['GET'])
+def get_single_saving(request, pk):
+    # select_related를 사용하여 관련된 Deposit 데이터를 미리 가져옵니다.
+    saving_option = SavingOption.objects.select_related('saving_id').get(pk=pk)
+
+    # DepositOption 데이터를 직렬화합니다.
+    saving_option_data = SavingOptionSerializer(saving_option).data
+
+    # 관련된 Deposit 데이터를 직접 추가합니다.
+    saving_data = {
+        'saving_id__fin_co_no': saving_option.saving_id.fin_co_no,
+        'saving_id__fin_prdt_cd': saving_option.saving_id.fin_prdt_cd,
+        'saving_id__kor_co_nm': saving_option.saving_id.kor_co_nm,
+        'saving_id__fin_prdt_nm': saving_option.saving_id.fin_prdt_nm,
+        'saving_id__join_way': saving_option.saving_id.join_way,
+        'saving_id__join_deny': saving_option.saving_id.join_deny,
+        'saving_id__join_member': saving_option.saving_id.join_member,
+        'saving_id__spcl_cnd': saving_option.saving_id.spcl_cnd,
+        'saving_id__etc_note': saving_option.saving_id.etc_note,
+        'saving_id__max_limit': saving_option.saving_id.max_limit,
+    }
+
+    # 두 데이터를 합칩니다.
+    response_data = {**saving_option_data, **saving_data}
+
+    return Response(response_data)
