@@ -27,6 +27,7 @@
 </template>
 
 <script setup>
+import axios from 'axios';
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from "vue-router";
 
@@ -37,6 +38,14 @@ const resultType = route.query.result
 const loading = ref(true)
 
 onMounted(() => {
+  axios({
+    method: 'get',
+    url: 'http://127.0.0.1:8000/savings/get-deposits/'
+  })
+  axios({
+    method: 'get',
+    url: 'http://127.0.0.1:8000/savings/get-savings/'
+  })
   setTimeout(() => {
     loading.value = false;
   }, 2000); // 1초
