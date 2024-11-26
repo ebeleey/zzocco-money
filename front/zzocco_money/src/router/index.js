@@ -39,7 +39,7 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: ProfileView,
-      redirect: { name: 'userInfo' }, // 이 줄을 추가합니다
+      redirect: { name: 'userInfo' }, 
 
       children: [
         { path: '', name: 'userInfo', component: UserInfo },
