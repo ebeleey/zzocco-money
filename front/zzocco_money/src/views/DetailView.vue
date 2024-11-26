@@ -72,8 +72,13 @@
             ></textarea>
             <button class="btn btn-primary" :disabled="!newComment">댓글 작성</button>
           </form>
-          <p v-else style="text-align: center;">댓글을 작성하려면 <RouterLink to="/login" style="text-decoration: none; color: black;">로그인</RouterLink>하세요.</p>
+          <p v-else style="text-align: center;">댓글을 작성하려면 <RouterLink to="/login" style="text-decoration: none; color: #3f241191;">로그인</RouterLink>하세요.</p>
           </div>
+        </div>
+        <div style="justify-content: center; display: flex;">
+          <RouterLink to="/community">
+            <button style="margin: 30px; padding: 5px 10px;">목록보기</button>
+          </RouterLink>
         </div>
       </div>
     </div>
@@ -99,6 +104,7 @@
   onMounted(async () => {
   try {
     await store.fetchUser();
+    const user = store.user
     const articleId = route.params.id;
     await communityStore.getArticle(articleId);
     await communityStore.getComments(articleId);
