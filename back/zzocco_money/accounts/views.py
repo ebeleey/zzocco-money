@@ -53,9 +53,9 @@ def user_info(request):
         return Response(serializer.data)
     elif request.method == 'PUT':
         serializer = UserSerializer(request.user, data=request.data, partial=True)
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
-                return Response(serializer.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
 
 
 @api_view(['POST'])
