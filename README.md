@@ -1,5 +1,5 @@
 <div align="center">
-  <img src='./front/zzocco_money/src/assets/logo_sprinkle.png' width='400px'>
+  <img src='./img/main.PNG'>
 </div>
 
 ## 프로젝트 개요
