@@ -37,7 +37,6 @@ const router = useRouter()
 const goToLogin = function() {
   router.push('/login')
 }
-
 const currentStep = ref(1); // 현재 단계
 const formData = ref({
 	basicInfo: { name: "", username: "", password: "", email: "" },
@@ -85,7 +84,10 @@ const handleSubmit = () => {
   .then(res => {
     console.log(formData)
     alert("회원가입이 완료되었습니다!");
-	  router.push({name: 'home'})
+	  store.logIn({
+      username: user.basicInfo.username,
+      password: user.basicInfo.password,
+    })
   })
   .catch(err => console.log(err))
 };
