@@ -4,38 +4,36 @@
       <span class="user-name">{{ user.name }}</span>님에게<br />
       딱 맞는 예적금 상품 Top3
     </h1>
-    <!-- <h4>{{ user.name }}님과 비슷한 관심사와 상황의<br />
-      다른 사용자들이 선택한 인기 예적금 상품을 모아봤어요.</h4> -->
-
-    <!-- <h4>{{ user.name }}님의 소비 성향과 재정 목표를 기반으로<br />
-      최적의 예적금 상품을 추천드려요.</h4> -->
-      <div v-if="explanations.length === 0" class="loading-container">
-        <p class="description">
-          {{ user.name }}님을 위한 맞춤형 추천 리스트를 준비하고 있어요 <span class="dots"></span><br> 
-          잠시만 기다려주세요!
-        </p>
-        <div class="spinner"></div>
-      </div>
+    <div v-if="explanations.length === 0" class="loading-container">
+      <p class="description">
+        {{ user.name }}님을 위한 맞춤형 추천 리스트를 준비하고 있어요 <span class="dots"></span><br> 
+        잠시만 기다려주세요!
+      </p>
+      <div class="spinner"></div>
+    </div>
     <div v-else class="recommend-page">
       <h4>{{ user.name }}님의 소비 성향과 재정 목표를 기반으로<br />
       다른 사용자들이 선택한 인기 예적금 상품을 모아봤어요.</h4>
-      <div
-      v-for="(item, index) in slides"
-      :key="index"
-      class="recommendations"
-      >
-        <div class="recommendation">
-          <div class="recommendation-header">
-            <h3>{{ item.product_type === 'deposit' ? item.deposit_id__kor_co_nm : item.saving_id__kor_co_nm }}</h3>
-            <h2 class="product-name">{{ item.product_type === 'deposit' ? item.deposit_id__fin_prdt_nm : item.saving_id__fin_prdt_nm }}</h2>
-          </div>
-          <hr />
-          <div class="recommendation-content">
-            {{ explanations[index] }}
-            <br>
+      <br>
+      <div class="recommendations">
+          <div
+        v-for="(item, index) in slides"
+        :key="index"
+        >
+          <div class="recommendation">
+            <div class="recommendation-header">
+              <h3>{{ item.product_type === 'deposit' ? item.deposit_id__kor_co_nm : item.saving_id__kor_co_nm }}</h3>
+              <h2 class="product-name">{{ item.product_type === 'deposit' ? item.deposit_id__fin_prdt_nm : item.saving_id__fin_prdt_nm }}</h2>
+            </div>
+            <hr />
+            <div class="recommendation-content">
+              {{ explanations[index] }}
+              <br>
+            </div>
           </div>
         </div>
       </div>
+      
     </div>
   </div>
 </template>
@@ -123,6 +121,8 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .recommend-page {
+  display: flex;
+  flex-direction: column;
   margin-top: 50px;
   display: flex;
   justify-content: center;
@@ -132,11 +132,11 @@ onMounted(async () => {
 
 .recommendations {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   text-align: center;
   background: #fff;
-  flex-direction: row; // Default to horizontal layout
 }
 
 .recommendation {
