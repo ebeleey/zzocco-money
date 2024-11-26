@@ -69,5 +69,9 @@ export const useAccountStore = defineStore('account', () => {
     }
   }
 
-  return { logIn, token, isLogin, logout, fetchUser, user }
+  const updateUser = function (updatedUserData) {
+    user.value = { ...user.value, ...updatedUserData };
+  }
+
+  return { logIn, token, isLogin, logout, fetchUser, user, updateUser }
 }, { persist: true }) 

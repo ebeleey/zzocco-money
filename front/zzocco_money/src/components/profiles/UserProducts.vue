@@ -1,8 +1,19 @@
 <template>
   <div class="products-page">
+    <!-- <div class="charts-container">
+				<div>
+					<h4>예금</h4>
+					<canvas id="depositChart" ref="depositChart"></canvas>
+				</div>
+				<div>
+					<h4>적금</h4>
+					<canvas id="savingChart" ref="savingChart"></canvas>
+				</div>
+			</div> -->
 		<div class="products-list">
 			<div class="products-list-title">
 				<h3>내가 가입한 상품</h3>
+        
 			</div>
 			<div class="products-list-content">
 				<div v-if="productList.deposits.length || productList.savings.length">
@@ -17,6 +28,9 @@
 							>
 								<span>{{ product.deposit_id__fin_prdt_nm }}</span>
 							</li>
+              <div class="chart-container">
+                <canvas id="depositChart" ref="depositChart"></canvas>
+              </div>
 						</div>
 						<br>
 						<div class="products-list-savings">
@@ -30,6 +44,9 @@
 								<span>{{ product.saving_id__fin_prdt_nm }}</span>	
 							
 							</li>
+              <div class="chart-container">
+                <canvas id="savingChart" ref="savingChart"></canvas>
+              </div>
 						</div>
 
 					</ul>
@@ -64,22 +81,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="products-chart">
-			<div class="products-chart-title">
-				<h3>가입한 상품 금리 비교</h3>
-			</div>
-			<div class="charts-container">
-				<div>
-					<h4>예금</h4>
-					<canvas id="depositChart" ref="depositChart"></canvas>
-				</div>
-				<div>
-					<h4>적금</h4>
-					<canvas id="savingChart" ref="savingChart"></canvas>
-				</div>
-			</div>
-		</div>
-
   </div>
 </template>
 
@@ -176,47 +177,69 @@ const manageProduct = async (action) => {
     console.error('Error managing product:', error);
   }
 };
-
 const createDepositChart = () => {
-  if (!depositChart.value) return
-  const ctx = depositChart.value.getContext("2d")
-  const labels = depositsData.value.map((item) => item.deposit_id__fin_prdt_nm)
-  const data1 = depositsData.value.map((item) => item.intr_rate)
-  const data2 = depositsData.value.map((item) => item.intr_rate2)
+  if (!depositChart.value) return;
+  const ctx = depositChart.value.getContext("2d");
+  const labels = depositsData.value.map((item) => item.deposit_id__fin_prdt_nm);
+  const data1 = depositsData.value.map((item) => item.intr_rate);
+  const data2 = depositsData.value.map((item) => item.intr_rate2);
 
   new Chart(ctx, {
     type: "bar",
     data: {
       labels,
       datasets: [
-        { label: "기본 금리 (%)", data: data1, backgroundColor: "rgba(54, 162, 235, 0.6)", borderColor: "rgba(54, 162, 235, 1)", borderWidth: 1 },
-        { label: "최대 금리 (%)", data: data2, backgroundColor: "rgba(75, 192, 192, 0.6)", borderColor: "rgba(75, 192, 192, 1)", borderWidth: 1 },
+        {
+          label: "기본 금리 (%)",
+          data: data1,
+          backgroundColor: "#6F4E37",
+          borderWidth: 1,
+        },
+        {
+          label: "최대 금리 (%)",
+          data: data2,
+          backgroundColor: "#F5DEB3",
+          borderWidth: 1,
+        },
       ],
     },
-    options: { responsive: true }
-  })
+    options: {
+      responsive: true,
+    },
+  });
 };
 
 const createSavingChart = () => {
-  if (!savingChart.value) return
-  const ctx = savingChart.value.getContext("2d")
-  
-  const labels = savingsData.value.map((item) => item.saving_id__fin_prdt_nm)
-  const data1 = savingsData.value.map((item) => item.intr_rate)
-  const data2 = savingsData.value.map((item) => item.intr_rate2)
+  if (!savingChart.value) return;
+  const ctx = savingChart.value.getContext("2d");
+  const labels = savingsData.value.map((item) => item.saving_id__fin_prdt_nm);
+  const data1 = savingsData.value.map((item) => item.intr_rate);
+  const data2 = savingsData.value.map((item) => item.intr_rate2);
 
   new Chart(ctx, {
     type: "bar",
     data: {
       labels,
       datasets: [
-        { label: "기본 금리 (%)", data: data1, backgroundColor: "rgba(255, 99, 132, 0.6)", borderColor: "rgba(255, 99,132 ,1)", borderWidth:1 },
-        { label:"최대 금리 (%)",data:data2 ,backgroundColor:"rgba(153 ,102 ,255 ,0.6)",borderColor:"rgba(153 ,102 ,255 ,1)",borderWidth :1},
-       ],
-     },
-     options:{responsive:true}
-   })
-}
+        {
+          label: "기본 금리 (%)",
+          data: data1,
+          backgroundColor: "#6F4E37",
+          borderWidth: 1,
+        },
+        {
+          label: "최대 금리 (%)",
+          data: data2,
+          backgroundColor: "#F5DEB3", 
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+    },
+  });
+};
 
 </script>
 
@@ -237,7 +260,7 @@ const createSavingChart = () => {
 
 .products-list-title,
 .products-chart-title {
-	width: 300px;
+	width: 30%;
 	text-align: right;
 }
 
@@ -270,10 +293,10 @@ h4 {
 	margin: 10px;
 }
 
-.charts-container {
+.chart-container {
   display: flex;
-  justify-content: space-around;
-  gap: 20px;
+  justify-content: center;
+
 }
 canvas {
   max-width: 400px;
