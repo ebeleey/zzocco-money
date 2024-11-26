@@ -1,18 +1,11 @@
 <template>
   <div class="products-page">
-    <!-- <div class="charts-container">
-				<div>
-					<h4>예금</h4>
-					<canvas id="depositChart" ref="depositChart"></canvas>
-				</div>
-				<div>
-					<h4>적금</h4>
-					<canvas id="savingChart" ref="savingChart"></canvas>
-				</div>
-			</div> -->
+
 		<div class="products-list">
 			<div class="products-list-title">
 				<h3>내가 가입한 상품</h3>
+        <p class="description">각 상품을 선택하면<br>상세 정보를 확인할 수 있습니다.</p>
+        <RouterLink :to="{name: 'savings'}"><button class="goButton">가입하러 가기</button></RouterLink>
         
 			</div>
 			<div class="products-list-content">
@@ -52,7 +45,7 @@
 					</ul>
 				</div>
 				<div v-else>
-					데이터가 없습니다.
+          <p style="margin:10px;">아직 가입한 상품이 없습니다.</p>
 				</div>
 
 				<!-- 상세 정보 모달 -->
@@ -70,13 +63,68 @@
 						</header>
 						
 						<div class="modal-details">
-							<!-- 각 detail-row에 대한 내용은 동일하게 유지 -->
-						</div>
+              <header>
+               <h2>{{ selectedProduct.fin_prdt_nm }}</h2>
+              </header>
 
-						<div v-if="isLoggedIn" class="modal-btn">
-							<button v-if="!isAdded" @click="manageProduct('add')">가입하기</button>
-							<button v-else @click="manageProduct('remove')">가입 취소하기</button>
-						</div>
+              <div class="modal-details">
+                <div class="detail-row">
+                  <span class="detail-label">금융회사</span>
+                  <span class="detail-value">
+                    {{ selectedProduct.type === 'deposit' 
+                    ? selectedProduct.deposit_id__kor_co_nm
+                    : selectedProduct.saving_id__kor_co_nm
+                    }}
+                  </span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">기본금리</span>
+                  <span class="detail-value">{{ selectedProduct.intr_rate }}%</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">최고 우대금리</span>
+                  <span class="detail-value">{{ selectedProduct.intr_rate2 }}%</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">가입 대상</span>
+                  <span class="detail-value">
+                    {{ selectedProduct.type === 'deposit' 
+                    ? selectedProduct.deposit_id__join_deny
+                    : selectedProduct.saving_id__join_deny }}
+                  </span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">저축 기간</span>
+                  <span class="detail-value">{{ selectedProduct.save_trm }}개월</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">가입 방법</span>
+                  <span class="detail-value">
+                    {{ selectedProduct.type === 'deposit' 
+                    ? selectedProduct.deposit_id__join_way
+                    : selectedProduct.saving_id__join_way }}
+                  </span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">우대 조건</span>
+                  <span class="detail-value">
+                    {{ selectedProduct.type === 'deposit' 
+                    ? selectedProduct.deposit_id__spcl_cnd
+                    : selectedProduct.saving_id__spcl_cnd }}%
+                  </span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">금리 유형</span>
+                  <span class="detail-value">{{ selectedProduct.intr_rate_type_nm }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-btn">
+              <button v-if="!isAdded" @click="manageProduct('add')">가입하기</button>
+              <button v-else @click="confirmRemove">가입 취소하기</button>
+            </div>
+
 					</div>
 				</div>
 			</div>
@@ -111,7 +159,6 @@ const depositChart = ref(null);
 const savingChart = ref(null);
 
 const user = ref(null)
-const isLoggedIn = computed(() => accountStore.isLogin)
 
 const productList = computed(() => ({
   deposits: depositsData.value,
@@ -149,6 +196,17 @@ const closeDetailModal = () => {
   selectedProduct.value = null;
 };
 
+// 상품 가입 여부
+const isAdded = computed(() => {
+
+  const productType = selectedProduct.value.type === 'deposit' ? 'deposits' : 'savings'
+  const productId = selectedProduct.value.id
+
+  const userProducts = accountStore.user?.product_list[productType]
+
+  return userProducts.includes(productId)
+})
+
 
 const manageProduct = async (action) => {
   if (!selectedProduct.value) return;
@@ -166,17 +224,19 @@ const manageProduct = async (action) => {
         'Authorization': `Token ${accountStore.token}`,
       },
     });
-		if (productType === 'deposits') {
-      depositsData.value = depositsData.value.filter(item => item.id !== productId);
-    } else {
-      savingsData.value = savingsData.value.filter(item => item.id !== productId);
-    }
-    closeDetailModal();
     accountStore.fetchUser();
   } catch (error) {
     console.error('Error managing product:', error);
   }
 };
+
+const confirmRemove = () => {
+  if (confirm("정말 가입을 취소하시겠습니까?")) {
+    manageProduct('remove');
+  }
+};
+
+
 const createDepositChart = () => {
   if (!depositChart.value) return;
   const ctx = depositChart.value.getContext("2d");
@@ -264,6 +324,11 @@ const createSavingChart = () => {
 	text-align: right;
 }
 
+.description {
+  font-size: 12px;
+  color: gray;
+}
+
 .products-list-content {
 	flex: 1;
 }
@@ -276,11 +341,17 @@ const createSavingChart = () => {
 h3 {
 	font-size: 22px;
 	font-weight: bolder;
+  line-height: 1.2;
+  word-break: keep-all; 
+  white-space: pre-wrap; 
 }
 
 h4 {
 	font-size: 17px;
 	font-weight: bolder;
+  line-height: 1.2;
+  word-break: keep-all; 
+  white-space: pre-wrap; 
 }
 
 .products-list-deposits,
@@ -293,6 +364,17 @@ h4 {
 	margin: 10px;
 }
 
+.goButton {
+  margin-top: 10px;
+  padding: 8px 10px;
+  line-height: 1.2;
+  word-break: keep-all; 
+  white-space: pre-wrap; 
+}
+
+
+/* 차트 */
+
 .chart-container {
   display: flex;
   justify-content: center;
@@ -302,6 +384,8 @@ canvas {
   max-width: 400px;
   max-height: 300px;
 }
+
+/* 모달 */
 
 .modal-overlay {
   position: fixed;
@@ -345,6 +429,33 @@ canvas {
   border: none;
   cursor: pointer;
 }
+
+.modal-details {
+  margin-top: 20px;
+}
+
+.detail-label {
+  font-weight: bold;
+  color: #3f2411;
+  width: 130px; /* 원하는 너비로 조정 */
+  flex-shrink: 0; /* 레이블 크기 유지 */
+}
+
+.detail-row {
+  display: flex;
+  align-items: center; /* 세로 정렬 */
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.detail-value {
+  color: #6d4c41;
+  flex-grow: 1; /* 남은 공간 차지 */
+  text-align: right; /* 값을 오른쪽 정렬 */
+}
+
 
 
 </style>
