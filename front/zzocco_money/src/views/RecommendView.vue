@@ -21,12 +21,14 @@
       >
         <div class="recommendation">
           <div class="recommendation-header">
-            <h3>{{ item.bankName }}</h3>
-            <h2 class="product-name">{{ item.productName }}</h2>
+            <h3>{{ item.product_type === 'deposit' ? item.deposit_id__kor_co_nm : item.saving_id__kor_co_nm }}</h3>
+            <h2 class="product-name">{{ item.product_type === 'deposit' ? item.deposit_id__fin_prdt_nm : item.saving_id__fin_prdt_nm }}</h2>
           </div>
           <hr />
           <div class="recommendation-content">
-            <p>{{ item.description }}</p>
+            <p>기본 금리: {{ item.intr_rate }}% | </p>
+            <br>
+            <p> 최고 우대 금리: {{ item.intr_rate2 }}%</p>
           </div>
         </div>
       </div>
@@ -38,6 +40,7 @@
 
 <script setup>
 import { useAccountStore } from "@/stores/account";
+import axios from "axios";
 import { ref, onMounted } from "vue";
 
 const accountStore = useAccountStore();
@@ -50,23 +53,15 @@ onMounted(async () => {
     await accountStore.fetchUser();
     user.value = accountStore.user;
 
-    slides.value = [
-      {
-        bankName: "우리은행",
-        productName: "JB 123 정기예금 (만기일시지급식)",
-        description: "우대금리 혜택이 풍부한 예금 상품입니다.",
-      },
-      {
-        bankName: "국민은행",
-        productName: "황금적금",
-        description: "고수익 적금을 원한다면 이 상품을 추천합니다.",
-      },
-      {
-        bankName: "신한은행",
-        productName: "스마트예금",
-        description: "스마트한 금융 상품으로, 유동성에 적합합니다.",
-      },
-    ];
+    await axios({
+      method: 'get',
+      url: `http://127.0.0.1:8000/savings/similar-users/${user.value.id}/`
+    }) .then((res)  => {
+      slides.value = res.data.top_3_products
+      console.log(res)
+    })
+      .catch(err => console.log(err))
+    
   } catch (error) {
     console.error(error);
   }
