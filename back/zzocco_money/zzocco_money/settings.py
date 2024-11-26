@@ -38,6 +38,8 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = 'media/'
 
 # Application definition
 INSTALLED_APPS = [
@@ -74,6 +76,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
 }
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

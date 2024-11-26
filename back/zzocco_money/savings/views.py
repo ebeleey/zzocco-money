@@ -225,7 +225,6 @@ def getSaving(request):
 
     return JsonResponse(list(options), safe=False)
 
-
 @api_view(['GET'])
 def get_single_deposit(request, pk):
     # select_related를 사용하여 관련된 Deposit 데이터를 미리 가져옵니다.
@@ -277,7 +276,6 @@ def get_single_saving(request, pk):
 
     # 두 데이터를 합칩니다.
     response_data = {**saving_option_data, **saving_data}
-
     return Response(response_data)
 
 

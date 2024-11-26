@@ -9,4 +9,5 @@ urlpatterns = [
     path('', include('dj_rest_auth.urls')),  # dj_rest_auth 기본 URL
     path('manage-product/', views.manage_product, name='manage_product'),
     path("upload-csv/", views.upload_csv)
+    path('update-profile-image/', views.update_profile_image, name='update_profile_image')
 ]

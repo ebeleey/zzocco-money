@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<form @submit.prevent="handleSubmit">
+		<form @submit.prevent="handleSubmit" @keydown.enter="nextStep">
 			<div class="form-group">
 				<label for="name">이름</label>
 				<input type="text" id="name" v-model="formData.basicInfo.name" placeholder="이름을 입력하세요." required />
@@ -28,9 +28,8 @@
 		</form>
 		<br>
 		<div class="button-container">
-	
-			<!-- '회원가입 완료' 버튼 -->
-			<button @click="nextStep">다음</button>
+			<!-- 다음 버튼 -->
+			<button @click="nextStep" type="submit">다음</button>
 		</div>
 	</div>
 </template>
