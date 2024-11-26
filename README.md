@@ -1,5 +1,5 @@
 <div align="center">
-  <img src='./front/zzocco_money/src/assets/logo_wave.png' width='300px'>
+  <img src='./front/zzocco_money/src/assets/logo_sprinkle.png' width='400px'>
 </div>
 
 ## 프로젝트 개요
@@ -68,7 +68,7 @@
 
 
 ### Frontend
-<img src="https://img.shields.io/badge/vue.js-42b883?style=for-the-badge&logo=vue.js&logoColor=white"> <img src="https://img.shields.io/badge/css-264DE4?style=for-the-badge&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white">
+<img src="https://img.shields.io/badge/vue.js-42b883?style=for-the-badge&logo=vue.js&logoColor=white"> <img src="https://img.shields.io/badge/css-264DE4?style=for-the-badge&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white"> <img src="https://img.shields.io/badge/chart.js-FF6384?style=for-the-badge&logo=chart.js&logoColor=white">
 
 ### DevOps
 <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"> <img src="https://img.shields.io/badge/github-black?style=for-the-badge&logo=github&logoColor=white">
