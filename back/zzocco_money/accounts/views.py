@@ -44,12 +44,18 @@ def login(request):
 
 
 # 유저 정보 보내기
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def user_info(request):
-    serializer = UserSerializer(request.user)
-    print(serializer.data)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        serializer = UserSerializer(request.user)
+        print(serializer.data)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data)
 
 
 @api_view(['POST'])
