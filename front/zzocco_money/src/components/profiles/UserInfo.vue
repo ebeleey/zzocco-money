@@ -108,7 +108,7 @@
           </div>
           <br>
           <div class="additional-info-item">
-            <h4>수입 전망</h4>
+            <h4>현재와 미래 수입 전망</h4>
             <hr style="margin: 0 0 12px; width: 80%;">
             <select v-model="editData.income_prospect">
               <option v-for="(label, key) in INCOME_PROSPECT_CHOICES" :key="key" :value="key">{{ label }}</option>
