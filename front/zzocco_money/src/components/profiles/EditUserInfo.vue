@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-else>
+    <div>
       <h2>회원정보 수정</h2>
       <form @submit.prevent="submitUpdate">
         <div class="basic-info-item">
