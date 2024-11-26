@@ -505,13 +505,7 @@ th.descending::after {
   margin-top: 20px;
 }
 
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
-}
+
 .detail-label {
   font-weight: bold;
   color: #3f2411;
@@ -543,7 +537,6 @@ th.descending::after {
 
 .sort-buttons button {
   background-color: #3f2411;
-
   padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
