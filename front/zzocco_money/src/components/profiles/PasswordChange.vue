@@ -1,38 +1,52 @@
 <template>
-  <div>
-    <h2>비밀번호 변경</h2>
-    <form @submit.prevent="changePassword">
-      <div>
-        <label for="current_password">현재 비밀번호</label>
-        <input
-          id="current_password"
-          v-model="current_password"
-          type="password"
-          required
-        />
+  <div class="password-change-page">
+    <form @submit.prevent="changePassword" class="password-change">
+      <div class="password-change-title">
+        <h3>비밀번호 변경</h3>
+        <button type="submit" class="edit-button">변경</button>
       </div>
-      <div>
-        <label for="new_password1">새 비밀번호</label>
-        <input
-          id="new_password1"
-          v-model="new_password1"
-          type="password"
-          required
-        />
+      <div class="password-change-container">
+        <div class="password-change-item">
+          <h4>현재 비밀번호</h4>
+          <hr style="margin: 0 0 12px; width: 80%;">
+          <input
+            id="current_password"
+            v-model="current_password"
+            type="password"
+            required
+          />
+        </div>
+        <br>
+        <div class="password-change-item">
+          <h4>새 비밀번호</h4>
+          <hr style="margin: 0 0 12px; width: 80%;">
+          <input
+            id="new_password1"
+            v-model="new_password1"
+            type="password"
+            required
+          />
+        </div>
+        <br>
+        <div class="password-change-item">
+          <h4>비밀번호 확인</h4>
+          <hr style="margin: 0 0 12px; width: 80%;">
+          <input
+            id="new_password2"
+            v-model="new_password2"
+            type="password"
+            required
+          />
+        </div>
+              
+
       </div>
-      <div>
-        <label for="new_password2">새 비밀번호 확인</label>
-        <input
-          id="new_password2"
-          v-model="new_password2"
-          type="password"
-          required
-        />
-      </div>
-      <button type="submit">변경</button>
+
     </form>
-    <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
-    <p v-if="successMessage" style="color: green;">{{ successMessage }}</p>
+    <div class="alert-text">
+      <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
+    </div>
+
   </div>
 </template>
 
@@ -73,22 +87,21 @@ export default {
           }
         );
 
+        alert("비밀번호가 성공적으로 변경되었습니다.");
         this.successMessage = "비밀번호가 성공적으로 변경되었습니다.";
         this.errorMessage = "";
         
-        // Optional: Reset form fields after successful change
         this.current_password = "";
         this.new_password1 = "";
         this.new_password2 = "";
+
       } catch (error) {
         console.error("Password change error:", error.response);
         
         this.successMessage = "";
         
-        // More detailed error handling
         if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
+
           const errorData = error.response.data;
           
           if (errorData.current_password) {
@@ -110,3 +123,71 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.password-change-page {
+  display: flex;
+  flex-direction: column;
+}
+
+h3 {
+	font-size: 22px;
+	font-weight: bolder;
+  line-height: 1.2;
+  word-break: keep-all; 
+  white-space: pre-wrap; 
+}
+
+h4 {
+	font-size: 17px;
+	font-weight: bolder;
+  line-height: 1.2;
+  word-break: keep-all; 
+  white-space: pre-wrap; 
+}
+
+.password-change {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.password-change-title {
+  width: 30%;
+  text-align: right;
+}
+
+.password-change-container {
+  flex: 1;
+  margin: 0 20px;
+}
+
+.password-change-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.password-change-item input {
+  width: 70%;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.edit-button {
+  /* margin-top: 10px; */
+  padding: 8px 10px;
+  line-height: 1.2;
+  word-break: keep-all; 
+  white-space: pre-wrap; 
+}
+
+.alert-text {
+  text-align: center;
+}
+
+
+</style>

@@ -89,8 +89,8 @@
                   <span class="detail-label">가입 대상</span>
                   <span class="detail-value">
                     {{ selectedProduct.type === 'deposit' 
-                    ? selectedProduct.deposit_id__join_deny
-                    : selectedProduct.saving_id__join_deny }}
+                    ? joinDenyMapping[selectedProduct.deposit_id__join_deny]
+                    : joinDenyMapping[selectedProduct.saving_id__join_deny] }}
                   </span>
                 </div>
                 <div class="detail-row">
@@ -136,6 +136,7 @@
 import { useAccountStore } from "@/stores/account"
 import { useSavingsStore } from "@/stores/savings"
 import { ref, onMounted, computed, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 import axios  from 'axios'
 import {
   Chart,
@@ -159,6 +160,13 @@ const depositChart = ref(null);
 const savingChart = ref(null);
 
 const user = ref(null)
+const router = useRouter()
+
+const joinDenyMapping = {
+  1: "제한없음",
+  2: "서민전용",
+  3: "일부제한",
+};
 
 const productList = computed(() => ({
   deposits: depositsData.value,
@@ -233,6 +241,8 @@ const manageProduct = async (action) => {
 const confirmRemove = () => {
   if (confirm("정말 가입을 취소하시겠습니까?")) {
     manageProduct('remove');
+    closeDetailModal()
+    router.go(0)
   }
 };
 

@@ -13,12 +13,21 @@
         </li>
         <li class="nav-item">
           <RouterLink 
+          :to="{ name: 'passwordChange' }"
+          class="nav-link"
+          >
+          비밀번호 변경
+         </RouterLink>
+        </li>
+        <li class="nav-item">
+          <RouterLink 
             :to="{ name: 'userProduct' }" 
             class="nav-link"
           >
             내가 가입한 금융상품
           </RouterLink>
         </li>
+
       </ul>
     </nav>
 
