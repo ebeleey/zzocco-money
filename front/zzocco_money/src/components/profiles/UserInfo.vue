@@ -185,15 +185,16 @@ const getChoiceLabel = (key, choices) => choices[key];
 
 const submitUpdate = async () => {
   try {
-    console.log("user : ", user.value)
-    console.log("editData : ", editData.value) 
+    // console.log("user : ", user.value)
+    // console.log("editData : ", editData.value) 
     const response = await axios.put('http://127.0.0.1:8000/accounts/user/', { ...editData.value }, {
       headers: {
         Authorization: `Token ${store.token}`
       }
     });
     store.fetchUser()
-    console.log("성공")
+    alert("회원 정보가 성공적으로 수정되었습니다.");
+
     editMode.value = false
     router.go(0)
   } catch (error) {
