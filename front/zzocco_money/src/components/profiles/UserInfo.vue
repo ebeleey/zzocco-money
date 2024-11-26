@@ -108,7 +108,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useAccountStore } from '@/stores/account';
-import { RouterLink, RouterView } from 'vue-router';
+import { useRouter, RouterLink, RouterView } from 'vue-router';
 import axios from 'axios'
 
 import defaultProfileImage from '@/assets/default_image.png';
@@ -117,6 +117,7 @@ import defaultProfileImage from '@/assets/default_image.png';
 const store = useAccountStore();
 const user = ref(store.user)
 
+const router = useRouter()
 const editMode = ref(false);
 const passwordVerified = ref(false);
 const password = ref('');
@@ -154,19 +155,22 @@ const INCOME_LEVEL_CHOICES = {
 const getChoiceLabel = (key, choices) => choices[key];
 
 // 정보 수정 요청
-// const submitUpdate = async () => {
-//   try {
-//     const response = await axios.put('/api/update-user', { ...editData.value });
-//     if (response.data.success) {
-//       Object.assign(user.value, editData.value);
-//       editMode.value = false;
-//       passwordVerified.value = false;
-//       alert('회원정보가 성공적으로 업데이트되었습니다.');
-//     }
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
+const submitUpdate = async () => {
+  try {
+    console.log(user)
+    const response = await axios.put('http://127.0.0.1:8000/accounts/user/', { ...editData.value }, {
+      headers: {
+        Authorization: `Token ${store.token}`
+      }
+    });
+    store.fetchUser()
+    console.log("성공")
+    editMode.value = false
+    router.go(0)
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 // 수정 모드 진입
 const enterEditMode = () => {
@@ -217,17 +221,14 @@ const uploadProfileImage = async () => {
     );
 
     // 상태 업데이트
-    if (data.imageUrl) {
-      const updatedUrl = data.imageUrl.startsWith('http')
-        ? data.imageUrl
-        : `http://127.0.0.1:8000${data.imageUrl}`;
-      store.updateUser({ ...store.user, profile_image: updatedUrl });
-      profileImagePreview.value = updatedUrl;
-      newProfileImage.value = null;
-      alert('프로필 사진이 성공적으로 업데이트되었습니다.');
-    } else {
-      throw new Error('응답에 이미지 URL이 포함되지 않았습니다.');
-    }
+    const updatedUrl = data.imageUrl.startsWith('http')
+      ? data.imageUrl
+      : `http://127.0.0.1:8000${data.imageUrl}`;
+    store.updateUser({ ...store.user, profile_image: updatedUrl });
+    profileImagePreview.value = updatedUrl;
+    newProfileImage.value = null;
+    alert('프로필 사진이 성공적으로 업데이트되었습니다.');
+    router.go(0)
   } catch (error) {
     console.error('프로필 이미지 업로드 실패:', error);
     alert('업로드 중 오류가 발생했습니다. 다시 시도해주세요.');
@@ -246,7 +247,7 @@ const getFullImageUrl = (path) => {
 
 </script>
 
-<<style scoped>
+<style scoped>
 .info-page {
   max-width: 800px;
   margin: 0 auto;
