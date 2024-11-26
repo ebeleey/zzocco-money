@@ -1,18 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
-# class Article(models.Model):
-#     user = models.ForeignKey(
-#         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
-#     )
-#     title = models.CharField(max_length=100)
-#     content = models.TextField()
-#     created_at = models.DateTimeField(auto_now_add=False)
-#     updated_at = models.models.DateTimeField(auto_now=False)
-
-
-
 class User(AbstractUser):
     def default_product_list():
         return {"deposits": [], "savings": []}
@@ -58,7 +46,7 @@ class User(AbstractUser):
         ('above_300m', '3억 원 이상'),
     ]
     
-    finance_type = models.CharField(max_length=20, choices=FINANCE_TYPE_CHOICES, default='stable_increase')
+    finance_type = models.CharField(max_length=20, choices=FINANCE_TYPE_CHOICES, default='planner')
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='male')  # 성별
     marriage = models.CharField(max_length=10, choices=MARRIAGE_CHOICES, default='single')  # 혼인 여부
     income_prospect = models.CharField(max_length=20, choices=INCOME_PROSPECT_CHOICES, default='stable_increase')  # 수입 전망

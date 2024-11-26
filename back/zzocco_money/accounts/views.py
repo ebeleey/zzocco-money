@@ -7,10 +7,14 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
-
-
-from .models import User
+import os
+import json
+import pandas as pd
+from django.conf import settings
 from .serializers import UserSerializer
+from .models import User
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -71,3 +75,47 @@ def manage_product(request):
         return Response({'message': message}, status=status.HTTP_200_OK)
     except ValueError as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+# BASE_DIR을 기준으로 파일 경로 설정
+csv_file_path = os.path.join(settings.BASE_DIR, 'accounts', 'dummy_user_data_corrected.csv')
+
+def save_users_from_csv():
+    # CSV 파일을 pandas DataFrame으로 읽기
+    df = pd.read_csv(csv_file_path)
+    
+    # DataFrame을 JSON 형식으로 변환
+    json_data = df.to_dict(orient='records')
+    
+    for item in json_data:
+        # product_list가 JSON 문자열로 되어 있을 경우 변환
+        if 'product_list' in item:
+            if isinstance(item['product_list'], str):
+                try:
+                    # JSON 문자열을 Python 딕셔너리로 변환
+                    item['product_list'] = json.loads(item['product_list'])
+                except json.JSONDecodeError as e:
+                    print(f"Invalid JSON in product_list: {item['product_list']}")
+                    continue  # 유효하지 않은 JSON 데이터를 건너뜀
+            elif not isinstance(item['product_list'], dict):
+                print(f"Unexpected type for product_list: {type(item['product_list'])}")
+                continue
+
+        # User 모델에 데이터 저장
+        if not User.objects.filter(username=item['username']).exists():
+            serializer = UserSerializer(data=item)
+            
+            if serializer.is_valid():
+                serializer.save()  # 유효한 경우 데이터베이스에 저장
+            else:
+                print(serializer.errors)  # 유효하지 않은 경우 오류 출력
+
+@csrf_exempt
+def upload_csv(request):
+    if request.method == 'POST':
+        # CSV 파일로부터 사용자 저장
+        save_users_from_csv()
+        
+        return HttpResponse("CSV file has been processed and users stored in the database.")
+    
+    return HttpResponse("Please use POST method to upload the CSV.")
