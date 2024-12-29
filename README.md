@@ -2,14 +2,27 @@
   <img src='./img/main.PNG'>
 </div>
 
+<br>
+<br>
+<br>
+
 ## ☑️ 프로젝트 개요
 - 예적금 상품 조회 및 추천 서비스
 - 기간: 2024.11.18 ~ 2024.11.26
+
+<br>
+
+
 
 ## 💰 기획의도
 - 너무나도 어려운 금융! 쉽고 재미있게 금융 상품을 추천해주는 방법은 없을까 고민하던 중, 각자의 특성에 맞는 금융 상품을 추천해주는 웹 서비스를 개발하고자 하였습니다.
 - **쪼꼬머니**는 **간단한 설문을 통해 사용자의 금융 성향을 분석하고, 이를 바탕으로 적절한 예적금 상품을 추천해주는 서비스**입니다.
 - 또한 간편하게 **금융 상품들을 비교**하고, **커뮤니티**를 통해 내가 알고 있는 정보들을 공유하며 똑똑한 금융 습관을 만들 수 있습니다.
+
+<br>
+<br>
+<br>
+
 
 ## 🧑‍🤝‍🧑 팀 소개
 
@@ -23,9 +36,14 @@
 
 ![alt text](img/image-1.png)
 
+<br>
 
 ## 📆 개발 일정
 ![alt text](img/image.png)
+
+<br>
+<br>
+<br>
 
 ## 🧰 주요 기능
 
@@ -35,12 +53,16 @@
 - **F**inance**BTI** 테스트
 - 간단한 설문을 통해 **금융 성향 분석**
 
+<br>
+
 ![테스트 결과](img/test_result.gif)
 - 설문 결과에 따라 재미있는 이름의 재미있는 이름의 네 가지 타입으로 나누기
   - 달콤하고 부드러운 **밀크초콜릿** 타입 (소비형)
   - 풍미 깊은 **다크초콜릿** 타입 (절약형)
   - 새롭고 특별한 **수제초콜릿** 타입 (투자형)
   - 균형 잡힌 **아몬드 초콜릿** 타입 (안정형)
+
+<br>
 
 #### 금융 상품 추천
 ![금융상품추천](img/recommend.gif)
@@ -50,7 +72,10 @@
   - 생성형 AI를 활용해 20000명 유저의 더미 데이터 DB에 저장
   - 유사도가 높은 상위 100명의 유저가 가장 많이 가입한 상품 3가지 추천
 - OpenAI API를 활용해 **추천 상품에 대한 설명**과 **추천 이유** 표시
-  
+
+<br>
+<br>
+
 
 ### 💻 금융 상품 조회
 
@@ -63,6 +88,10 @@
   - 내림차순/오름차순 토글
 - 클릭 시 모달으로 **상품 상세 정보 확인** 및 마이페이지에서 확인할 수 있는 **'가입한 상품'에 추가** 가능
 
+<br>
+<br>
+
+
 ### 🧍 회원 인증 관련
 #### 회원가입
 
@@ -72,22 +101,32 @@
 - 아이디 중복 허용 X
 - 비밀번호 확인
 
+<br>
+
 ![회원가입 2](/img/signup2.gif)
 
 - 회원가입 시 회원 정보(성별, 미래 소득 전망, 총 자산 규모, 연평균 수입 등) 입력받아 금융 상품 추천에 활용
 
+<br>
+
+
 #### 로그인 및 로그아웃
 - 토큰 인증 방식
 - 로그인 상태에 따라 화면 표시 달라짐
+
+<br>
 
 #### 마이페이지
 ##### 회원 정보
 ![회원정보](img/mypage1.gif)
 - 내 정보 조회 및 수정 가능
 
+<br>
+
 #### 비밀번호 변경
 ![비밀번호 변경](img/password.gif)
 
+<br>
 
 #### 내가 가입한 금융상품
 
@@ -98,19 +137,27 @@
   - 개별 상품의 상세 정보 확인 가능
   - 가입 상품 목록에서 제거하는 '가입 취소하기' 가능
 
+<br>
+<br>
 
 
 ### 💱 환율 계산
 - 현재 환율 API를 활용해 환율 계산하기
 
 ![환율계산기](img/currency.gif)
-  
+
+<br>
+<br>
+
 ### 🏦 주변 은행 검색
 
 ![주변은행검색](img/bank.gif)
 
 - 광역시/도, 시/군/구, 은행을 선택하여 특정 지역의 특정 은행 위치 검색 가능
 - 검색 결과를 지도에 마커로 표시
+
+<br>
+<br>
 
 ### 🗣️ 커뮤니티
 - 자유 게시판과 금융꿀팁 게시판으로 분류
@@ -126,6 +173,8 @@
 ![게시글삭제](img/community-d.gif)
 - 자신이 작성한 게시글만 삭제 가능
 
+<br>
+
 #### 댓글 CRUD
 
 ![댓글 작성](img/community-reply-c.gif)
@@ -135,6 +184,9 @@
 - 자신이 작성한 댓글만 수정 및 삭제 가능
 
 
+<br>
+<br>
+<br>
 
 
 
@@ -174,6 +226,10 @@
     git branch -d feature/{기능명}
     ```
 
+<br>
+<br>
+<br>
+
 ## ⚙ 개발환경
 ### Backend
 <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=Django&logoColor=white"> <img src="https://img.shields.io/badge/PYTHON-3776AB?style=for-the-badge&logo=python&logoColor=white"> <img src="https://img.shields.io/badge/sqlite-003B57?style=for-the-badge&logo=sqlite&logoColor=white">
@@ -189,6 +245,9 @@
 ### Tools
  <img src="https://img.shields.io/badge/postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white"> <img src="https://img.shields.io/badge/figma-1ABCFE?style=for-the-badge&logo=figma&logoColor=white">
 
+<br>
+<br>
+<br>
 
 
 ## 💿 프로젝트 폴더 구조
@@ -290,8 +349,17 @@ zzocco-money
         │  
         └─__pycache__
 ```
+
+<br>
+<br>
+<br>
+
 ## 🖨️ ERD
 ![alt text](img/erd.png)
+
+<br>
+<br>
+<br>
 
 ## 📃 사용한 데이터
 - 금융감독원 금융상품통합비교공시 API
@@ -299,6 +367,10 @@ zzocco-money
 - KAKAO 지도 API
 - OpenAI API
 - 생성형 AI를 통해 생성한 20000개의 유저 더미 데이터
+
+<br>
+<br>
+<br>
 
 ## 💬 느낀 점
 - **다이**
